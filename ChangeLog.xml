@@ -13,6 +13,21 @@
     Revision history for the Perl extension module Net::ISBNDB. This is an
     API to communicate with the web service hosted by isbndb.com.
   </description>
+  <release version="0.11" tag="v0_11" date="2006-09-13T02:11:00-06:00">
+    <change>
+      <fileset>
+        <file path="ChangeLog" revision="9" />
+        <file path="ChangeLog.xml" revision="9" />
+        <file path="MANIFEST" revision="9" />
+        <file path="README" revision="9" />
+        <file path="Makefile.PL" revision="9" />
+      </fileset>
+      <description>
+        The initial release omitted the changelog files and README from the
+        manifest.
+      </description>
+    </change>
+  </release>
   <release version="0.10" tag="v0_10" date="2006-09-13T01:15:06-06:00">
     <change>
       <fileset>

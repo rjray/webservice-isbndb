@@ -1,6 +1,6 @@
 Net::ISBNDB - Access to the isbndb.com API
 
-Version: 0.10
+Version: 0.11
 
 WHAT IS IT
 
@@ -32,4 +32,5 @@ Please send any reports of problems or bugs to rjray@blackperl.com
 
 CHANGES
 
-This is the initial release.
+The initial release omitted several files from MANIFEST. This release is only
+to make sure they are distributed.

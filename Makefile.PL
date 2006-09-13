@@ -12,7 +12,7 @@ $CLEAN = 'pod2html-* *.html *.log t/*.log META.yml SIGNATURE *.ppd ';
 WriteMakefile(
               (MM->can('signature_target') ? (SIGN => 1) : ()),
               NAME      => 'Net::ISBNDB',
-              VERSION   => '0.10',
+              VERSION   => '0.11',
               AUTHOR    => 'Randy J. Ray',
               ABSTRACT  =>
               'Data and communication classes for talking to isbndb.com',

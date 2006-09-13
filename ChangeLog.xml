@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+    The schema for this namespace may be found at the following URL:
+
+    http://www.blackperl.com/XML/ChangeLog/ChangeLogML.xsd
+
+    $Id$
+-->
+<changelog xmlns="http://www.blackperl.com/XML/ChangeLog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blackperl.com/XML/ChangeLog etc/ChangeLogML.xsd">
+  <description>
+    Revision history for the Perl extension module Net::ISBNDB. This is an
+    API to communicate with the web service hosted by isbndb.com.
+  </description>
+  <release version="0.10" tag="v0_10" date="2006-09-13T01:15:06-06:00">
+    <change>
+      <fileset>
+        <file path="ChangeLog" revision="1" />
+        <file path="ChangeLog.xml" revision="1" />
+        <file path="etc/ChangeLogML.xsd" revision="1" />
+        <file path="lib/Net/ISBNDB/API.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/Agent.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/API/Books.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/API/Publishers.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/API/Subjects.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/API/Categories.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/API/Authors.pm" revision="1" />
+        <file path="lib/Net/ISBNDB/Agent/REST.pm" revision="1" />
+        <file path="Makefile.PL" revision="1" />
+        <file path="MANIFEST" revision="1" />
+        <file path="MANIFEST.SKIP" revision="1" />
+        <file path="README" revision="1" />
+        <file path="t/01_pod.t" revision="1" />
+        <file path="t/02_pod_coverage.t" revision="1" />
+        <file path="t/00_load.t" revision="1" />
+        <file path="t/00_signature.t" revision="1" />
+      </fileset>
+      <description>
+        Initial release.
+      </description>
+    </change>
+  </release>
+</changelog>

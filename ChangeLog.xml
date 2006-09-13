@@ -17,15 +17,15 @@
     <change>
       <fileset>
         <file path="ChangeLog" revision="5" />
-        <file path="ChangeLog.xml" revision="5" />
+        <file path="ChangeLog.xml" revision="7" />
         <file path="etc/ChangeLogML.xsd" revision="5" />
         <file path="lib/Net/ISBNDB/API.pm" revision="5" />
         <file path="lib/Net/ISBNDB/Agent.pm" revision="5" />
         <file path="lib/Net/ISBNDB/API/Books.pm" revision="5" />
-        <file path="lib/Net/ISBNDB/API/Publishers.pm" revision="5" />
-        <file path="lib/Net/ISBNDB/API/Subjects.pm" revision="5" />
-        <file path="lib/Net/ISBNDB/API/Categories.pm" revision="5" />
-        <file path="lib/Net/ISBNDB/API/Authors.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Publishers.pm" revision="6" />
+        <file path="lib/Net/ISBNDB/API/Subjects.pm" revision="6" />
+        <file path="lib/Net/ISBNDB/API/Categories.pm" revision="6" />
+        <file path="lib/Net/ISBNDB/API/Authors.pm" revision="6" />
         <file path="lib/Net/ISBNDB/Agent/REST.pm" revision="5" />
         <file path="Makefile.PL" revision="5" />
         <file path="MANIFEST" revision="5" />

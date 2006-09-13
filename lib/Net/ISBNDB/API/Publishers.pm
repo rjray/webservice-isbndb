@@ -40,10 +40,10 @@ use Error;
 
 $VERSION = "0.10";
 
-my %id         : ATTR(:name<id>             :default<>);
-my %name       : ATTR(:name<name>           :default<>);
-my %location   : ATTR(:name<location>       :default<>);
-my %categories : ATTR(:init_arg<categories> :default<>);
+my %id         : ATTR(:init_arg<id> :get<id> :default<>);
+my %name       : ATTR(:name<name>            :default<>);
+my %location   : ATTR(:name<location>        :default<>);
+my %categories : ATTR(:init_arg<categories>  :default<>);
 
 ###############################################################################
 #

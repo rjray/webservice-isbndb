@@ -40,7 +40,7 @@ use Error;
 
 $VERSION = "0.10";
 
-my %id               : ATTR(:name<id>               :default<>);
+my %id               : ATTR(:init_arg<id> :get<id>  :default<>);
 my %name             : ATTR(:name<name>             :default<>);
 my %book_count       : ATTR(:name<book_count>       :default<>);
 my %marc_field       : ATTR(:name<marc_field>       :default<>);

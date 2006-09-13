@@ -42,7 +42,7 @@ use Error;
 
 $VERSION = "0.10";
 
-my %id             : ATTR(:name<id>                      :default<>);
+my %id             : ATTR(:init_arg<id>     :get<id>     :default<>);
 my %parent         : ATTR(:init_arg<parent> :set<parent> :default<>);
 my %name           : ATTR(:name<name>                    :default<>);
 my %summary        : ATTR(:name<summary>                 :default<>);

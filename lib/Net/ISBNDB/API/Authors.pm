@@ -42,14 +42,14 @@ use Error;
 
 $VERSION = "0.10";
 
-my %id         : ATTR(:name<id>             :default<>);
-my %name       : ATTR(:name<name>           :default<>);
-my %first_name : ATTR(:name<first_name>     :default<>);
-my %last_name  : ATTR(:name<last_name>      :default<>);
-my %dates      : ATTR(:name<dates>          :default<>);
-my %has_books  : ATTR(:name<has_books>      :default<>);
-my %categories : ATTR(:init_arg<categories> :default<>);
-my %subjects   : ATTR(:init_arg<subjects>   :default<>);
+my %id         : ATTR(:init_arg<id> :get<id> :default<>);
+my %name       : ATTR(:name<name>            :default<>);
+my %first_name : ATTR(:name<first_name>      :default<>);
+my %last_name  : ATTR(:name<last_name>       :default<>);
+my %dates      : ATTR(:name<dates>           :default<>);
+my %has_books  : ATTR(:name<has_books>       :default<>);
+my %categories : ATTR(:init_arg<categories>  :default<>);
+my %subjects   : ATTR(:init_arg<subjects>    :default<>);
 
 ###############################################################################
 #

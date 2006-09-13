@@ -16,25 +16,25 @@
   <release version="0.10" tag="v0_10" date="2006-09-13T01:15:06-06:00">
     <change>
       <fileset>
-        <file path="ChangeLog" revision="1" />
-        <file path="ChangeLog.xml" revision="1" />
-        <file path="etc/ChangeLogML.xsd" revision="1" />
-        <file path="lib/Net/ISBNDB/API.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/Agent.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/API/Books.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/API/Publishers.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/API/Subjects.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/API/Categories.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/API/Authors.pm" revision="1" />
-        <file path="lib/Net/ISBNDB/Agent/REST.pm" revision="1" />
-        <file path="Makefile.PL" revision="1" />
-        <file path="MANIFEST" revision="1" />
-        <file path="MANIFEST.SKIP" revision="1" />
-        <file path="README" revision="1" />
-        <file path="t/01_pod.t" revision="1" />
-        <file path="t/02_pod_coverage.t" revision="1" />
-        <file path="t/00_load.t" revision="1" />
-        <file path="t/00_signature.t" revision="1" />
+        <file path="ChangeLog" revision="5" />
+        <file path="ChangeLog.xml" revision="5" />
+        <file path="etc/ChangeLogML.xsd" revision="5" />
+        <file path="lib/Net/ISBNDB/API.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/Agent.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Books.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Publishers.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Subjects.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Categories.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/API/Authors.pm" revision="5" />
+        <file path="lib/Net/ISBNDB/Agent/REST.pm" revision="5" />
+        <file path="Makefile.PL" revision="5" />
+        <file path="MANIFEST" revision="5" />
+        <file path="MANIFEST.SKIP" revision="5" />
+        <file path="README" revision="5" />
+        <file path="t/01_pod.t" revision="5" />
+        <file path="t/02_pod_coverage.t" revision="5" />
+        <file path="t/00_load.t" revision="5" />
+        <file path="t/00_signature.t" revision="5" />
       </fileset>
       <description>
         Initial release.

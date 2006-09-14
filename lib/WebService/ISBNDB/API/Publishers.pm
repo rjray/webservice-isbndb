@@ -27,13 +27,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API::Publishers;
+package WebService::ISBNDB::API::Publishers;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::API';
+use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
@@ -317,20 +317,20 @@ sub normalize_args
 
 =head1 NAME
 
-Net::ISBNDB::API::Publishers - Data class for publisher information
+WebService::ISBNDB::API::Publishers - Data class for publisher information
 
 =head1 SYNOPSIS
 
-    use Net::ISBNDB::API::Publishers;
+    use WebService::ISBNDB::API::Publishers;
 
-    $oreilly =
-        Net::ISBNDB::API::Publishers->search({ name => 'oreilly' });
+    $oreilly = WebService::ISBNDB::API::Publishers->
+                   search({ name => 'oreilly' });
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::API::Publishers> class extends the B<Net::ISBNDB::API>
-class to add attributes specific to the data B<isbndb.com> provides on
-publishers.
+The B<WebService::ISBNDB::API::Publishers> class extends the
+B<WebService::ISBNDB::API> class to add attributes specific to the data
+B<isbndb.com> provides on publishers.
 
 =head1 METHODS
 
@@ -355,9 +355,9 @@ If the argument is the hash-reference form, then a new object is always
 constructed; to perform searches see the search() and find() methods. Thus,
 the following two lines are in fact different:
 
-    $book = Net::ISBNDB::API::Publishers->new({ id => "oreilly" });
+    $book = WebService::ISBNDB::API::Publishers->new({ id => "oreilly" });
 
-    $book = Net::ISBNDB::API::Publishers->new('oreilly');
+    $book = WebService::ISBNDB::API::Publishers->new('oreilly');
 
 The first creates a new object that has only the C<id> attribute set. The
 second returns a new object that represents the publisher with ID C<oreilly>,
@@ -378,7 +378,7 @@ it "CUMULATIVE", to ensure that all attributes at all levels are copied.
 
 =back
 
-See the copy() method in L<Net::ISBNDB::API>.
+See the copy() method in L<WebService::ISBNDB::API>.
 
 =head2 Accessors
 
@@ -439,7 +439,7 @@ Set the location to the value in C<$LOCATION>.
 =item get_categories
 
 Return a list-reference of the categories for the publisher. Each element of
-the list will be an instance of B<Net::ISBNDB::API::Categories>.
+the list will be an instance of B<WebService::ISBNDB::API::Categories>.
 
 =item set_categories($CATEGORIES)
 
@@ -512,11 +512,12 @@ closely as possible, for ease of understanding.
 
 Get the record for the ID C<oreilly>:
 
-    $oreilly = Net::ISBNDB::API::Publishers->find('oreilly');
+    $oreilly = WebService::ISBNDB::API::Publishers->find('oreilly');
 
 Find all publisher records containing C<oreilly>:
 
-    $ora = Net::ISBNDB::API::Publishers->search({ name => 'oreilly' });
+    $ora = WebService::ISBNDB::API::Publishers->
+               search({ name => 'oreilly' });
 
 =head1 CAVEATS
 
@@ -529,7 +530,7 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>, L<Net::ISBNDB::API::Categories>
+L<WebService::ISBNDB::API>, L<WebService::ISBNDB::API::Categories>
 
 =head1 AUTHOR
 

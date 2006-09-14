@@ -32,13 +32,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API::Books;
+package WebService::ISBNDB::API::Books;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::API';
+use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
@@ -166,7 +166,7 @@ sub normalize_args
         {
             if (ref $value)
             {
-                if ($value->isa('Net::ISBNDB::API::Authors'))
+                if ($value->isa('WebService::ISBNDB::API::Authors'))
                 {
                     $args->{"index$count"} = 'person_id';
                     $args->{"value$count"} = $value->get_id;
@@ -174,7 +174,8 @@ sub normalize_args
                 else
                 {
                     throw Error::Simple("Value for argument '$key' must be " .
-                                        'string or Net::ISBNDB::API::Authors' .
+                                        'string or ' .
+                                        'WebService::ISBNDB::API::Authors' .
                                         ' derivative');
                 }
             }
@@ -192,7 +193,7 @@ sub normalize_args
         {
             if (ref $value)
             {
-                if ($value->isa('Net::ISBNDB::API::Publishers'))
+                if ($value->isa('WebService::ISBNDB::API::Publishers'))
                 {
                     $args->{"index$count"} = 'publisher_id';
                     $args->{"value$count"} = $value->get_id;
@@ -201,8 +202,8 @@ sub normalize_args
                 {
                     throw Error::Simple("Value for argument '$key' must be " .
                                         'string or ' .
-                                        'Net::ISBNDB::API::Publishers ' .
-                                        'derivative');
+                                        'WebService::ISBNDB::API::Publishers' .
+                                        ' derivative');
                 }
             }
             else
@@ -219,7 +220,7 @@ sub normalize_args
         {
             if (ref $value)
             {
-                if ($value->isa('Net::ISBNDB::API::Subjects'))
+                if ($value->isa('WebService::ISBNDB::API::Subjects'))
                 {
                     $args->{"index$count"} = 'subject_id';
                     $args->{"value$count"} = $value->get_id;
@@ -227,8 +228,9 @@ sub normalize_args
                 else
                 {
                     throw Error::Simple("Value for argument '$key' must be " .
-                                        'string or Net::ISBNDB::API::Subjects' .
-                                        ' derivative');
+                                        'string or ' .
+                                        'WebService::ISBNDB::API::Subjects ' .
+                                        'derivative');
                 }
             }
             else
@@ -562,20 +564,20 @@ sub copy : CUMULATIVE
 
 =head1 NAME
 
-Net::ISBNDB::API::Books - Object representation of book data from isbndb.com
+WebService::ISBNDB::API::Books - Data class for book information
 
 =head1 SYNOPSIS
 
-    use Net::ISBNDB::API::Books;
+    use WebService::ISBNDB::API::Books;
 
-    my $book = Net::ISBNDB::API->new({ api_key => $key,
-                                       isbn => '0596002068' });
+    my $book = WebService::ISBNDB::API->new({ api_key => $key,
+                                              isbn => '0596002068' });
 
 =head1 DESCRIPTION
 
 This class represents book data from B<isbndb.com>. It is a sub-class of
-B<Net::ISBNDB::API> (see L<Net::ISBNDB::API>), and inherits all the attributes
-and methods from that class.
+B<WebService::ISBNDB::API> (see L<WebService::ISBNDB::API>), and inherits all
+the attributes and methods from that class.
 
 =head1 METHODS
 
@@ -604,9 +606,9 @@ If the argument is the hash-reference form, then a new object is always
 constructed; to perform searches see the search() and find() methods. Thus,
 the following two lines are in fact different:
 
-    $book = Net::ISBNDB::API::Books->new({ isbn => '0596002068' });
+    $book = WebService::ISBNDB::API::Books->new({ isbn => '0596002068' });
 
-    $book = Net::ISBNDB::API::Books->new('0596002068');
+    $book = WebService::ISBNDB::API::Books->new('0596002068');
 
 The first creates a new object that has only the C<isbn> attribute set. The
 second returns a new object that represents the book with ISBN C<0596002068>,
@@ -627,7 +629,7 @@ it "CUMULATIVE", to ensure that all attributes at all levels are copied.
 
 =back
 
-See the copy() method in L<Net::ISBNDB::API>.
+See the copy() method in L<WebService::ISBNDB::API>.
 
 =head2 Accessors
 
@@ -653,9 +655,9 @@ The full title of the book, including any sub-title.
 
 =item authors
 
-An array (stored as a reference) of the B<Net::ISBNDB::API::Authors> objects
-that refer to the authors of the book. These are not actually loaded from
-the service until they are first fetched.
+An array (stored as a reference) of the B<WebService::ISBNDB::API::Authors>
+objects that refer to the authors of the book. These are not actually loaded
+from the service until they are first fetched.
 
 =item authors_text
 
@@ -665,8 +667,8 @@ to display the names themselves.
 
 =item publisher
 
-The B<Net::ISBNDB::API::Publisher> object that refers to the book's publisher.
-This is not loaded until the first request to fetch it is made.
+The B<WebService::ISBNDB::API::Publisher> object that refers to the book's
+publisher.  This is not loaded until the first request to fetch it is made.
 
 =item publisher_text
 
@@ -676,9 +678,9 @@ display the publisher's name.
 
 =item subjects
 
-An array (stored as a reference) of the B<Net::ISBNDB::API::Subjects> objects
-that refer to the subjects this book is associated with. As with the authors,
-the actual objects are not loaded until requested.
+An array (stored as a reference) of the B<WebService::ISBNDB::API::Subjects>
+objects that refer to the subjects this book is associated with. As with the
+authors, the actual objects are not loaded until requested.
 
 =back
 
@@ -723,9 +725,9 @@ Set the long title of the book.
 
 =item get_authors
 
-Get the list of author objects (instances of B<Net::ISBNDB::API::Authors> or
-a sub-class) for the book. The objects are not fetched from the source until
-the first call to this method.
+Get the list of author objects (instances of
+B<WebService::ISBNDB::API::Authors> or a sub-class) for the book. The objects
+are not fetched from the source until the first call to this method.
 
 =item set_authors($LIST)
 
@@ -744,9 +746,9 @@ Set the text-representation of the authors.
 
 =item get_publisher
 
-Return the publisher object (instance of B<Net::ISBNDB::API::Publishers> or a
-sub-class) for this book. The object is not loaded from the source until the
-first request to this method.
+Return the publisher object (instance of
+B<WebService::ISBNDB::API::Publishers> or a sub-class) for this book. The
+object is not loaded from the source until the first request to this method.
 
 =item set_publisher($PUBLISHER)
 
@@ -756,9 +758,9 @@ next call to get_publisher() will resolve it into an object.
 
 =item get_subjects
 
-Get the list of subject objects (instances of B<Net::ISBNDB::API::Subjects>
-or a sub-class) for the book. The objects are not fetched from the source
-until the first call to this method.
+Get the list of subject objects (instances of
+B<WebService::ISBNDB::API::Subjects> or a sub-class) for the book. The objects
+are not fetched from the source until the first call to this method.
 
 =item set_subjects($LIST)
 
@@ -827,23 +829,25 @@ will simply not return any records.
 =item author
 
 The value for this key should be either an object of the
-B<Net::ISBNDB::API::Authors> class (or sub-class thereof), or a text string.
-If the value is an object, the search is done against the specific author ID.
-If the value is a string, the search is done using the "combined" search key,
-and may return results unrelated to the intended query.
+B<WebService::ISBNDB::API::Authors> class (or sub-class thereof), or a text
+string.  If the value is an object, the search is done against the specific
+author ID.  If the value is a string, the search is done using the "combined"
+search key, and may return results unrelated to the intended query.
 
 =item publisher
 
-The value for this key may be an object of the B<Net::ISBNDB::API::Publishers>
-class (or sub-class thereof) or a text string. If it is an object, the ID is
-used in a specific search. If the value is a string, it is used with the
-"combined" search-key, and may return unexpected results.
+The value for this key may be an object of the
+B<WebService::ISBNDB::API::Publishers> class (or sub-class thereof) or a text
+string. If it is an object, the ID is used in a specific search. If the value
+is a string, it is used with the "combined" search-key, and may return
+unexpected results.
 
 =item subject
 
 The value for this key is expected to be either an object (of the
-B<Net::ISBNDB::API::Subjects> class or sub-class thereof) or a literal subject
-ID as a string. The subject cannot be searched for using the "combined" key.
+B<WebService::ISBNDB::API::Subjects> class or sub-class thereof) or a literal
+subject ID as a string. The subject cannot be searched for using the
+"combined" key.
 
 =item combined
 
@@ -876,16 +880,17 @@ closely as possible, for ease of understanding.
 
 Search for all books with "perl" in the title:
 
-    $perlbooks = Net::ISBNDB::API::Books->search({ title => "perl" });
+    $perlbooks = WebService::ISBNDB::API::Books->
+                     search({ title => "perl" });
 
 Search for all books by Edgar Allan Poe:
 
-    $poebooks = Net::ISBNDB::API::Books->search({ author =>
-                                                  'edgar allan poe' });
+    $poebooks = WebService::ISBNDB::API::Books->
+                    search({ author => 'edgar allan poe' });
 
 Find the record for "Progamming Web Services With Perl":
 
-    $pwswp = Net::ISBNDB::API::Books->find('0596002068');
+    $pwswp = WebService::ISBNDB::API::Books->find('0596002068');
 
 =head1 CAVEATS
 
@@ -898,8 +903,8 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>, L<Net::ISBNDB::API::Authors>,
-L<Net::ISBNDB::API::Publishers>, L<Net::ISBNDB::API::Subjects>,
+L<WebService::ISBNDB::API>, L<WebService::ISBNDB::API::Authors>,
+L<WebService::ISBNDB::API::Publishers>, L<WebService::ISBNDB::API::Subjects>,
 L<Business::ISBN>
 
 =head1 AUTHOR

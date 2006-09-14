@@ -5,14 +5,14 @@ MANIFEST				# This file
 MANIFEST.SKIP				# Things to not package
 README
 etc/ChangeLogML.xsd			# XML schema for ChangeLog.xml
-lib/Net/ISBNDB/Agent.pm			# Code classes from here down
-lib/Net/ISBNDB/Agent/REST.pm
-lib/Net/ISBNDB/API/Authors.pm
-lib/Net/ISBNDB/API/Books.pm
-lib/Net/ISBNDB/API/Categories.pm
-lib/Net/ISBNDB/API.pm
-lib/Net/ISBNDB/API/Publishers.pm
-lib/Net/ISBNDB/API/Subjects.pm
+lib/WebService/ISBNDB/Agent.pm		# Code classes from here down
+lib/WebService/ISBNDB/Agent/REST.pm
+lib/WebService/ISBNDB/API/Authors.pm
+lib/WebService/ISBNDB/API/Books.pm
+lib/WebService/ISBNDB/API/Categories.pm
+lib/WebService/ISBNDB/API.pm
+lib/WebService/ISBNDB/API/Publishers.pm
+lib/WebService/ISBNDB/API/Subjects.pm
 t/00_load.t				# Unit tests from here on down.
 t/00_signature.t
 t/01_pod.t

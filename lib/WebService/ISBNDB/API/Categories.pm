@@ -29,13 +29,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API::Categories;
+package WebService::ISBNDB::API::Categories;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::API';
+use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
@@ -353,7 +353,8 @@ sub normalize_args
         {
             $args->{"index$count"} = 'parent_id';
             $args->{"value$count"} =
-                (ref $value and $value->isa('Net::ISBNDB::API::Categories')) ?
+                (ref $value and
+                 $value->isa('WebService::ISBNDB::API::Categories')) ?
                 $value->id : $value;
 
             next;
@@ -383,20 +384,20 @@ sub normalize_args
 
 =head1 NAME
 
-Net::ISBNDB::API::Categories - Data class for category information
+WebService::ISBNDB::API::Categories - Data class for category information
 
 =head1 SYNOPSIS
 
-    use Net::ISBNDB::API::Categories;
+    use WebService::ISBNDB::API::Categories;
 
-    $ray_authors = Net::ISBNDB::API::Categories->
-        search({ name => 'alphabetically.authors.r.a.y' });
+    $ray_authors = WebService::ISBNDB::API::Categories->
+                       search({ name => 'alphabetically.authors.r.a.y' });
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::API::Categories> class extends the B<Net::ISBNDB::API>
-class to add attributes specific to the data B<isbndb.com> provides on
-categories.
+The B<WebService::ISBNDB::API::Categories> class extends the
+B<WebService::ISBNDB::API> class to add attributes specific to the data
+B<isbndb.com> provides on categories.
 
 =head1 METHODS
 
@@ -421,9 +422,10 @@ If the argument is the hash-reference form, then a new object is always
 constructed; to perform searches see the search() and find() methods. Thus,
 the following two lines are in fact different:
 
-    $book = Net::ISBNDB::API::Categories->new({ id => "arts.music" });
+    $book = WebService::ISBNDB::API::Categories->
+                new({ id => "arts.music" });
 
-    $book = Net::ISBNDB::API::Categories->new('arts.music');
+    $book = WebService::ISBNDB::API::Categories->new('arts.music');
 
 The first creates a new object that has only the C<id> attribute set. The
 second returns a new object that represents the category named C<arts.music>,
@@ -444,7 +446,7 @@ it "CUMULATIVE", to ensure that all attributes at all levels are copied.
 
 =back
 
-See the copy() method in L<Net::ISBNDB::API>.
+See the copy() method in L<WebService::ISBNDB::API>.
 
 =head2 Accessors
 
@@ -509,7 +511,7 @@ Set the name to the value in C<$NAME>.
 
 =item get_parent
 
-Return the B<Net::ISBNDB::API::Categories> object that represents this
+Return the B<WebService::ISBNDB::API::Categories> object that represents this
 category's parent. If this is a top-level category, then the method returns
 C<undef>.
 
@@ -546,7 +548,7 @@ Set the element count.
 =item get_sub_categories
 
 Return a list-reference of the sub-categories for the category. Each element
-of the list will be an instance of B<Net::ISBNDB::API::Categories>.
+of the list will be an instance of B<WebService::ISBNDB::API::Categories>.
 
 =item set_sub_categories($CATEGORIES)
 
@@ -626,12 +628,12 @@ closely as possible, for ease of understanding.
 
 Get the record for the ID C<science>:
 
-    $science = Net::ISBNDB::API::Categories->find('science');
+    $science = WebService::ISBNDB::API::Categories->find('science');
 
 Find all category records that are sub-categories of C<science>:
 
-    $science2 =
-        Net::ISBNDB::API::Categories->search({ parent => $science });
+    $science2 = WebService::ISBNDB::API::Categories->
+                    search({ parent => $science });
 
 =head1 CAVEATS
 
@@ -644,7 +646,7 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>
+L<WebService::ISBNDB::API>
 
 =head1 AUTHOR
 

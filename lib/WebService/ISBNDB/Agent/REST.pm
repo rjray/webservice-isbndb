@@ -32,13 +32,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::Agent::REST;
+package WebService::ISBNDB::Agent::REST;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::Agent';
+use base 'WebService::ISBNDB::Agent';
 
 use Class::Std;
 use Error;
@@ -211,7 +211,7 @@ sub parse_authors : RESTRICTED
     my ($total_results, $page_size, $page_number, $shown_results, $list_elt,
         @authorblocks, $authors, $one_author, $authorref, $tmp);
     # The class should already be loaded before we got to this point:
-    my $class = Net::ISBNDB::API->class_for_type('Authors');
+    my $class = WebService::ISBNDB::API->class_for_type('Authors');
 
     # For now, we aren't interested in the root element (the only useful piece
     # of information in it is the server-time of the request). So skip down a
@@ -309,7 +309,7 @@ sub parse_books : RESTRICTED
     my ($total_results, $page_size, $page_number, $shown_results, $list_elt,
         @bookblocks, $books, $one_book, $bookref, $tmp);
     # The class should already be loaded before we got to this point:
-    my $class = Net::ISBNDB::API->class_for_type('Books');
+    my $class = WebService::ISBNDB::API->class_for_type('Books');
 
     # For now, we aren't interested in the root element (the only useful piece
     # of information in it is the server-time of the request). So skip down a
@@ -411,7 +411,7 @@ sub parse_categories : RESTRICTED
     my ($total_results, $page_size, $page_number, $shown_results, $list_elt,
         @catblocks, $cats, $one_cat, $catref, $tmp);
     # The class should already be loaded before we got to this point:
-    my $class = Net::ISBNDB::API->class_for_type('Categories');
+    my $class = WebService::ISBNDB::API->class_for_type('Categories');
 
     # For now, we aren't interested in the root element (the only useful piece
     # of information in it is the server-time of the request). So skip down a
@@ -495,7 +495,7 @@ sub parse_publishers : RESTRICTED
     my ($total_results, $page_size, $page_number, $shown_results, $list_elt,
         @pubblocks, $pubs, $one_pub, $pubref, $tmp);
     # The class should already be loaded before we got to this point:
-    my $class = Net::ISBNDB::API->class_for_type('Publishers');
+    my $class = WebService::ISBNDB::API->class_for_type('Publishers');
 
     # For now, we aren't interested in the root element (the only useful piece
     # of information in it is the server-time of the request). So skip down a
@@ -574,7 +574,7 @@ sub parse_subjects : RESTRICTED
     my ($total_results, $page_size, $page_number, $shown_results, $list_elt,
         @subjectblocks, $subjects, $one_subject, $subjectref, $tmp);
     # The class should already be loaded before we got to this point:
-    my $class = Net::ISBNDB::API->class_for_type('Subjects');
+    my $class = WebService::ISBNDB::API->class_for_type('Subjects');
 
     # For now, we aren't interested in the root element (the only useful piece
     # of information in it is the server-time of the request). So skip down a
@@ -641,7 +641,7 @@ sub parse_subjects : RESTRICTED
 
 =head1 NAME
 
-Net::ISBNDB::Agent::REST - Agent sub-class that implements a REST protocol
+WebService::ISBNDB::Agent::REST - Agent sub-class for the REST protocol
 
 =head1 SYNOPSIS
 
@@ -687,7 +687,7 @@ is a boolean that indicates whether a single value should be returned, or all
 values that result from parsing.
 
 This method is restricted to this class, and is the required overload of the
-request() method from the parent class (L<Net::ISBNDB::Agent>).
+request() method from the parent class (L<WebService::ISBNDB::Agent>).
 
 =item request_method($OBJ, $ARGS)
 
@@ -716,7 +716,7 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::Agent>, L<LWP::UserAgent>
+L<WebService::ISBNDB::Agent>, L<LWP::UserAgent>
 
 =head1 AUTHOR
 

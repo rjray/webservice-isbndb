@@ -27,13 +27,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API::Subjects;
+package WebService::ISBNDB::API::Subjects;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::API';
+use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
@@ -313,7 +313,8 @@ sub normalize_args
         {
             $args->{"index$count"} = 'category_id';
             $args->{"value$count"} =
-                (ref $value and $value->isa('Net::ISBNDB::API::Categories')) ?
+                (ref $value and
+                 $value->isa('WebService::ISBNDB::API::Categories')) ?
                 $value->id : $value;
 
             next;
@@ -343,19 +344,20 @@ sub normalize_args
 
 =head1 NAME
 
-Net::ISBNDB::API::Subjects - Data class for subject information
+WebService::ISBNDB::API::Subjects - Data class for subject information
 
 =head1 SYNOPSIS
 
-    use Net::ISBNDB::API::Subjects;
+    use WebService::ISBNDB::API::Subjects;
 
-    $net_prog = Net::ISBNDB::API::Authors->find('internet_programming');
+    $net_prog = WebService::ISBNDB::API::Subjects->
+                    find('internet_programming');
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::API::Subjects> class extends the B<Net::ISBNDB::API>
-class to add attributes specific to the data B<isbndb.com> provides on
-subjects.
+The B<WebService::ISBNDB::API::Subjects> class extends the
+B<WebService::ISBNDB::API> class to add attributes specific to the data
+B<isbndb.com> provides on subjects.
 
 =head1 METHODS
 
@@ -380,10 +382,10 @@ If the argument is the hash-reference form, then a new object is always
 constructed; to perform searches see the search() and find() methods. Thus,
 the following two lines are in fact different:
 
-    $book = Net::ISBNDB::API::Authors->
+    $book = WebService::ISBNDB::API::Subjects->
         new({ id => "internet_programming" });
 
-    $book = Net::ISBNDB::API::Authors->new('internet_programming');
+    $book = WebService::ISBNDB::API::Subjects->new('internet_programming');
 
 The first creates a new object that has only the C<id> attribute set. The
 second returns a new object that represents the given subject,
@@ -404,7 +406,7 @@ it "CUMULATIVE", to ensure that all attributes at all levels are copied.
 
 =back
 
-See the copy() method in L<Net::ISBNDB::API>.
+See the copy() method in L<WebService::ISBNDB::API>.
 
 =head2 Accessors
 
@@ -457,7 +459,7 @@ object is created, since B<isbndb.com> is a read-only source.
 =item get_name
 
 Return the author's name. This is the full name, as would appear in the
-C<author_text> field of a B<Net::ISBNDB::API::Books> object.
+C<author_text> field of a B<WebService::ISBNDB::API::Books> object.
 
 =item set_name($NAME)
 
@@ -498,7 +500,8 @@ Set the value for the second MARC indicator.
 =item get_categories
 
 Return a list-reference of the categories this aubject is listed in. Each
-element of the list will be an instance of B<Net::ISBNDB::API::Categories>.
+element of the list will be an instance of
+B<WebService::ISBNDB::API::Categories>.
 
 =item set_categories($CATEGORIES)
 
@@ -578,12 +581,13 @@ closely as possible, for ease of understanding.
 
 Get the record for the subject, "perl_computer_program_language":
 
-    $perl = Net::ISBNDB::API::Subjects->
-        find('perl_computer_program_language');
+    $perl = WebService::ISBNDB::API::Subjects->
+                find('perl_computer_program_language');
 
 Find all subject with "perl" in their name:
 
-    $allperl = Net::ISBNDB::API::Subjects->search({ name => 'perl' });
+    $allperl = WebService::ISBNDB::API::Subjects->
+                   search({ name => 'perl' });
 
 =head1 CAVEATS
 
@@ -596,7 +600,7 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>, L<Net::ISBNDB::API::Categories>
+L<WebService::ISBNDB::API>, L<WebService::ISBNDB::API::Categories>
 
 =head1 AUTHOR
 

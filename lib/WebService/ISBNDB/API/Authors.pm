@@ -29,13 +29,13 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API::Authors;
+package WebService::ISBNDB::API::Authors;
 
 use 5.6.0;
 use strict;
 use warnings;
 use vars qw($VERSION);
-use base 'Net::ISBNDB::API';
+use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
@@ -179,7 +179,8 @@ sub set_categories
 {
     my ($self, $list) = @_;
 
-    throw Error::Simple("Argument to 'set_categories' must be a list reference")
+    throw Error::Simple("Argument to 'set_categories' must be a list " .
+			"reference")
         unless (ref($list) eq 'ARRAY');
 
     # Make a copy of the list
@@ -416,19 +417,19 @@ sub normalize_args
 
 =head1 NAME
 
-Net::ISBNDB::API::Authors - Data class for author information
+WebService::ISBNDB::API::Authors - Data class for author information
 
 =head1 SYNOPSIS
 
-    use Net::ISBNDB::API::Authors;
+    use WebService::ISBNDB::API::Authors;
 
-    $me = Net::ISBNDB::API::Authors->find('ray_randy_j');
+    $me = WebService::ISBNDB::API::Authors->find('ray_randy_j');
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::API::Authors> class extends the B<Net::ISBNDB::API>
-class to add attributes specific to the data B<isbndb.com> provides on
-authors.
+The B<WebService::ISBNDB::API::Authors> class extends the
+B<WebService::ISBNDB::API> class to add attributes specific to the data
+B<isbndb.com> provides on authors.
 
 =head1 METHODS
 
@@ -453,9 +454,9 @@ If the argument is the hash-reference form, then a new object is always
 constructed; to perform searches see the search() and find() methods. Thus,
 the following two lines are in fact different:
 
-    $book = Net::ISBNDB::API::Authors->new({ id => "ray_randy_j" });
+    $book = WebService::ISBNDB::API::Authors->new({ id => "ray_randy_j" });
 
-    $book = Net::ISBNDB::API::Authors->new('ray_randy_j');
+    $book = WebService::ISBNDB::API::Authors->new('ray_randy_j');
 
 The first creates a new object that has only the C<id> attribute set. The
 second returns a new object that represents the given author,
@@ -476,7 +477,7 @@ it "CUMULATIVE", to ensure that all attributes at all levels are copied.
 
 =back
 
-See the copy() method in L<Net::ISBNDB::API>.
+See the copy() method in L<WebService::ISBNDB::API>.
 
 =head2 Accessors
 
@@ -544,7 +545,7 @@ object is created, since B<isbndb.com> is a read-only source.
 =item get_name
 
 Return the author's name. This is the full name, as would appear in the
-C<author_text> field of a B<Net::ISBNDB::API::Books> object.
+C<author_text> field of a B<WebService::ISBNDB::API::Books> object.
 
 =item set_name($NAME)
 
@@ -589,7 +590,8 @@ service's database.
 =item get_categories
 
 Return a list-reference of the categories this author is listed in. Each
-element of the list will be an instance of B<Net::ISBNDB::API::Categories>.
+element of the list will be an instance of
+B<WebService::ISBNDB::API::Categories>.
 
 =item set_categories($CATEGORIES)
 
@@ -601,11 +603,11 @@ requested (via get_categories()) by the user.
 =item get_subjects
 
 Return a list-reference of the subjects this author has books in. Each element
-of the list will be an instance of B<Net::ISBNDB::API::Subjects>. Note that
-these subject objects differ slightly from having instantiated the same
-subjects directly; their C<book_count> attributes indicate the number of
-books specific to this author that fall under the subject, not the total
-number of books from the database as a whole.
+of the list will be an instance of B<WebService::ISBNDB::API::Subjects>. Note
+that these subject objects differ slightly from having instantiated the same
+subjects directly; their C<book_count> attributes indicate the number of books
+specific to this author that fall under the subject, not the total number of
+books from the database as a whole.
 
 =item set_subjects($SUBJECTS)
 
@@ -678,11 +680,12 @@ closely as possible, for ease of understanding.
 
 Get the record for the author of this module:
 
-    $me = Net::ISBNDB::API::Authors->find('ray_randy_j');
+    $me = WebService::ISBNDB::API::Authors->find('ray_randy_j');
 
 Find all authors with "Clinton" in their name:
 
-    $clintons = Net::ISBNDB::API::Authors->search({ name => 'clinton' });
+    $clintons = WebService::ISBNDB::API::Authors->
+                    search({ name => 'clinton' });
 
 =head1 CAVEATS
 
@@ -695,8 +698,8 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>, L<Net::ISBNDB::API::Categories>,
-L<Net::ISBNDB::API::Subjects>
+L<WebService::ISBNDB::API>, L<WebService::ISBNDB::API::Categories>,
+L<WebService::ISBNDB::API::Subjects>
 
 =head1 AUTHOR
 

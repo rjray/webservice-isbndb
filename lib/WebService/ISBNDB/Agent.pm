@@ -42,7 +42,7 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::Agent;
+package WebService::ISBNDB::Agent;
 
 use 5.6.0;
 use strict;
@@ -85,11 +85,11 @@ my %agent_args : ATTR(:name<agent_args> :default<>);
 ###############################################################################
 sub new
 {
-	my ($class, @argz) = @_;
-	my ($proto, $self);
+        my ($class, @argz) = @_;
+        my ($proto, $self);
 
     # Need to make sure $class is the name, not a reference, for later tests:
-	$class = ref($class) || $class;
+        $class = ref($class) || $class;
 
     # If $class matches this package, then they must specify a protocol
     # as the leading argument (currently only 'REST')
@@ -466,13 +466,13 @@ sub resolve_obj : RESTRICTED
     my $retval;
 
     # Is it already a usable object?
-    if ($obj->isa('Net::ISBNDB::API'))
+    if ($obj->isa('WebService::ISBNDB::API'))
     {
         # This actually catches two of the cases, ref($obj) and $obj being
         # the name of a class that qualifies.
         $retval = $obj;
     }
-    elsif (my $tmp = Net::ISBNDB::API->class_for_type($obj))
+    elsif (my $tmp = WebService::ISBNDB::API->class_for_type($obj))
     {
         $retval = $tmp;
     }
@@ -580,22 +580,23 @@ sub _lr_trim
 
 =head1 NAME
 
-Net::ISBNDB::Agent - Base class for data-retrieval agents
+WebService::ISBNDB::Agent - Base class for data-retrieval agents
 
 =head1 SYNOPSIS
 
-    package Net::ISBNDB::Agent::REST;
+    package WebService::ISBNDB::Agent::REST;
 
     use strict;
     use warnings;
-    use base 'Net::ISBNDB::Agent';
+    use base 'WebService::ISBNDB::Agent';
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::Agent> class is a base class for all the classes that
-provide actual communication protocol support for the B<Net::ISBNDB::API>
-module. Unlike the API class, this class is not usable on its own except as
-a factory to create instances of classes that derive from it.
+The B<WebService::ISBNDB::Agent> class is a base class for all the classes
+that provide actual communication protocol support for the
+B<WebService::ISBNDB::API> module. Unlike the API class, this class is not
+usable on its own except as a factory to create instances of classes that
+derive from it.
 
 The agent classes are responsible for actually setting up the web requests
 to retrieve data, parsing the results of those calls, and returning the
@@ -670,7 +671,7 @@ The following accessor methods are provided by this class:
 Retrieve the user-agent this object uses for HTTP communication. The creation
 of this object is delayed until the first request to fetch it (unless the
 user has explicitly set the agent, or provided an agent in the construction
-of the B<Net::ISBNDB::Agent>-derived object).
+of the B<WebService::ISBNDB::Agent>-derived object).
 
 =item set_agent($AGENT)
 
@@ -749,16 +750,16 @@ B<isbndb.com> should offer other methods besides REST. These class methods
 can be used by separate modules to register their protocols with this
 class.
 
-As with the type-map methods in B<Net::ISBNDB::API>, all of the protocol-map
-methods may be called as static methods.
+As with the type-map methods in B<WebService::ISBNDB::API>, all of the
+protocol-map methods may be called as static methods.
 
 =head2 Making Requests
 
 The role of the agent classes is to make the requests for data from the
-B<isbndb.com> service, parse the body of the response and convert that data
-to objects from the B<Net::ISBNDB::API> hierarchy. To do this, this base
-class provides methods for making the requests, which themselves are
-composed of several methods restricted to the B<Net::ISBNDB::Agent> hierarchy.
+B<isbndb.com> service, parse the body of the response and convert that data to
+objects from the B<WebService::ISBNDB::API> hierarchy. To do this, this base
+class provides methods for making the requests, which themselves are composed
+of several methods restricted to the B<WebService::ISBNDB::Agent> hierarchy.
 
 The methods are:
 
@@ -772,26 +773,26 @@ C<$OBJ> can be one of three types of values:
 
 =over 4
 
-=item B<Net::ISBNDB::API>-derived object
+=item B<WebService::ISBNDB::API>-derived object
 
 If the value is an object from one of the API classes (excluding
-B<Net::ISBNDB::API> itself), it is used not only to control the type of
+B<WebService::ISBNDB::API> itself), it is used not only to control the type of
 request, but it is also overwritten with the result of the request. It is
 also the return value of the call when successful.
 
 =item Type name
 
-If the value is a type recognized by the B<Net::ISBNDB::API> class, the class
-itself is retrieved via the B<class_for_type> method. That class is used to
-provide the type-specific data that would otherwise be retrieved through an
+If the value is a type recognized by the B<WebService::ISBNDB::API> class, the
+class itself is retrieved via the B<class_for_type> method. That class is used
+to provide the type-specific data that would otherwise be retrieved through an
 existing object, and it is used to instantiate the new object with the data
 returned by the request.
 
 =item Class name
 
-If the value is a full class name, it is first tested to see that the class
-is a decendant of B<Net::ISBNDB::API>. If so, it is used in the same way as
-the class derived from the previous case.
+If the value is a full class name, it is first tested to see that the class is
+a decendant of B<WebService::ISBNDB::API>. If so, it is used in the same way
+as the class derived from the previous case.
 
 =back
 
@@ -823,7 +824,7 @@ Resolves the disposition of the argument C<$OBJ>. This is what gets called by
 B<request_single> and B<request_all> to determine how to interpret the first
 argument.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item raw_request($OBJ, $ARGS) (R)
@@ -835,7 +836,7 @@ In case of error (either from information missing from the following methods
 or from HTTP communication failure), an exception is thrown. No parsing of the
 content is done by this method.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item request($OBJ, $ARGS [ , $SINGLE ]) (R)
@@ -849,7 +850,7 @@ C<$ARGS> parameters are the same as for B<request_single> and B<request_all>.
 The optional argument C<$SINGLE> signifies that the request should only return
 a single object, not a list of all objects returned by the service.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item request_method($OBJ, $ARGS) (R)
@@ -860,7 +861,7 @@ An exception is thrown in case of error (such as C<$OBJ> not being valid). The
 C<$OBJ> and C<$ARGS> parameters fulfill the same roles as defined for
 B<request_single>.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item request_uri($OBJ, $ARGS) (R)
@@ -870,7 +871,7 @@ An exception is thrown in case of error (such as C<$OBJ> not being valid). The
 C<$OBJ> and C<$ARGS> parameters fulfill the same roles as defined for
 B<request_single>.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item request_headers($OBJ, $ARGS) (R)
@@ -881,7 +882,7 @@ empty array, if no additional headers are needed. An exception is thrown if
 there is an error. The C<$OBJ> and C<$ARGS> parameters are the same as defined
 for B<request_single>.
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =item request_body($OBJ, $ARGS) (R)
@@ -891,7 +892,7 @@ The scalar may be zero-length, if no data is needed in the request body. An
 exception is thrown if there is an error. The arguments are the same as for
 B<request_single> (and all the other methods in this group).
 
-This method is restricted to the B<Net::ISBNDB::Agent> class and its
+This method is restricted to the B<WebService::ISBNDB::Agent> class and its
 decendents.
 
 =back
@@ -905,7 +906,8 @@ a request body or additional headers).
 
 =head1 SEE ALSO
 
-L<Net::ISBNDB::API>, L<Net::ISBNDB::Agent::REST>, L<LWP::UserAgent>, L<URI>
+L<WebService::ISBNDB::API>, L<WebService::ISBNDB::Agent::REST>,
+L<LWP::UserAgent>, L<URI>
 
 =head1 AUTHOR
 

@@ -31,7 +31,7 @@
 #
 ###############################################################################
 
-package Net::ISBNDB::API;
+package WebService::ISBNDB::API;
 
 use 5.6.0;
 use strict;
@@ -42,7 +42,7 @@ use constant CORETYPES  => qw(Authors Books Categories Publishers Subjects);
 
 use Class::Std;
 use Error;
-require Net::ISBNDB::Agent;
+require WebService::ISBNDB::Agent;
 
 BEGIN
 {
@@ -111,8 +111,8 @@ sub import
 ###############################################################################
 sub new
 {
-	my ($class, @argz) = @_;
-	my ($type, $self, %obj_defaults, $args, $new);
+        my ($class, @argz) = @_;
+        my ($type, $self, %obj_defaults, $args, $new);
 
     # Need to make sure $class is the name, not a reference, for later tests.
     # But if it is a reference, we should also save the protocol and api_key
@@ -121,7 +121,7 @@ sub new
     {
         $obj_defaults{protocol} = $class->get_protocol;
         $obj_defaults{api_key} = $class->get_api_key;
-	    $class = ref($class);
+            $class = ref($class);
     }
 
     # If $class matches this package, then they are allowed to specify a type
@@ -191,9 +191,9 @@ sub BUILD
     {
         # First, test that agent is valid
         throw Error::Simple('Value for "agent" parameter must derive from ' .
-                            'Net::ISBNDB::Agent')
+                            'WebService::ISBNDB::Agent')
             unless (ref($args->{agent}) and
-                    $args->{agent}->isa('Net::ISBNDB::Agent'));
+                    $args->{agent}->isa('WebService::ISBNDB::Agent'));
         # Set $args->{protocol} if it isn't already set. Test it if it is.
         if ($args->{protocol})
         {
@@ -418,8 +418,8 @@ sub set_protocol
     if ($agent)
     {
         throw Error::Simple('New agent object must derive from ' .
-                            'Net::ISBNDB::Agent')
-            unless (ref $agent and $agent->isa('Net::ISBNDB::Agent'));
+                            'WebService::ISBNDB::Agent')
+            unless (ref $agent and $agent->isa('WebService::ISBNDB::Agent'));
     }
 
     $protocol{ident $self} = $proto;
@@ -442,7 +442,8 @@ sub set_protocol
 #
 #   Globals:        %agent
 #
-#   Returns:        Success:    Object that derives from Net::ISBNDB::Agent
+#   Returns:        Success:    Object that is a (or derives from)
+#                                 WebService::ISBNDB::Agent
 #                   Failure:    throws Error::Simple
 #
 ###############################################################################
@@ -462,9 +463,9 @@ sub get_agent
         $protocol = $protocol{$id} if $id;
         $protocol = $self->get_default_protocol unless $protocol;
 
-        # new() in Net::ISBNDB::Agent also acts as a factory
-        $agent = Net::ISBNDB::Agent->new($protocol,
-                                         { agent_args => $agent_args });
+        # new() in WebService::ISBNDB::Agent also acts as a factory
+        $agent = WebService::ISBNDB::Agent->new($protocol,
+                                                { agent_args => $agent_args });
         $agent{$id} = $agent if ($id);
     }
 
@@ -480,7 +481,8 @@ sub get_agent
 #   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
 #                   $self     in      ref       Object
 #                   $agent    in      ref       New agent object. Must derive
-#                                                 from Net::ISBNDB::Agent.
+#                                                 from
+#                                                 WebService::ISBNDB::Agent.
 #
 #   Globals:        %agent
 #
@@ -492,8 +494,8 @@ sub set_agent
 {
     my ($self, $agent) = @_;
 
-    throw Error::Simple("New agent must derive from Net::ISBNDB::Agent")
-        unless (ref $agent and $agent->isa('Net::ISBNDB::Agent'));
+    throw Error::Simple("New agent must derive from WebService::ISBNDB::Agent")
+        unless (ref $agent and $agent->isa('WebService::ISBNDB::Agent'));
     throw Error::Simple("New agent does not match object's declared protocol" .
                         ' (' . $self->get_protocol . ')')
         unless $agent->protocol($self->get_protocol);
@@ -775,9 +777,10 @@ sub get_default_agent
 
     unless ($DEFAULTS{agent})
     {
-        $DEFAULTS{agent} = Net::ISBNDB::Agent->new($class->get_protocol(),
-                                                   { agent_args =>
-                                                     $DEFAULTS{agent_args} });
+        $DEFAULTS{agent} =
+            WebService::ISBNDB::Agent->new($class->get_protocol(),
+                                           { agent_args =>
+                                             $DEFAULTS{agent_args} });
     }
 
     $DEFAULTS{agent};
@@ -901,13 +904,13 @@ sub copy : CUMULATIVE
 
 =head1 NAME
 
-Net::ISBNDB::API - Base class for the Net::ISBNDB API classes
+WebService::ISBNDB::API - Base class for the WebService::ISBNDB API classes
 
 =head1 SYNOPSIS
 
-    require Net::ISBNDB::API;
+    require WebService::ISBNDB::API;
 
-    $handle = Net::ISBNDB::API->new({ protocol => REST =>
+    $handle = WebService::ISBNDB::API->new({ protocol => REST =>
                                       api_key => $key });
 
     $book = $handle->new(Books => { isbn => '0596002068' });
@@ -916,10 +919,11 @@ Net::ISBNDB::API - Base class for the Net::ISBNDB API classes
 
 =head1 DESCRIPTION
 
-The B<Net::ISBNDB::API> class is the base for the classes that handle books,
-publishers, authors, categories and subjects. It also acts as a factory-class
-for instantiating those other classes. Any of the data classes can be created
-from the constructor of this class, using the syntax described below.
+The B<WebService::ISBNDB::API> class is the base for the classes that handle
+books, publishers, authors, categories and subjects. It also acts as a
+factory-class for instantiating those other classes. Any of the data classes
+can be created from the constructor of this class, using the syntax described
+below.
 
 This class manages the common elements of the data classes, including the
 handling of the communication agent used to make requests of B<isbndb.com>.
@@ -960,7 +964,7 @@ Constructs a new object, returning the referent. The value of C<$ARGS> is a
 hash-reference of key/value pairs that correspond to the attributes for the
 class. If C<$TYPE> is provided, then the value must match one of the known
 data-types, and the new object will be created from that class rather than
-B<Net::ISBNDB::API>. Likewise, C<$ARGS> will be passed to that class'
+B<WebService::ISBNDB::API>. Likewise, C<$ARGS> will be passed to that class'
 constructor and not processed at all by this one.
 
 If C<$TYPE> is not a known type (see L</Managing Types>), then an exception
@@ -1011,24 +1015,24 @@ object. (See L</Default Attribute Values>.)
 =item agent
 
 This attribute stores the object used for communicating with the service.
-The value must be a sub-class of the B<Net::ISBNDB::Agent> class.
+The value must be a sub-class of the B<WebService::ISBNDB::Agent> class.
  (See L</Default Attribute Values>.)
 
 =item agent_args
 
-When the B<Net::ISBNDB::Agent>-based object is instantiated, any arguments
-stored in this attribute will be passed to the constructor. If set, this
-attribute's value must be a hash-reference (otherwise the constructor will
-throw an exception). (See L</Default Attribute Values>.)
+When the B<WebService::ISBNDB::Agent>-based object is instantiated, any
+arguments stored in this attribute will be passed to the constructor. If set,
+this attribute's value must be a hash-reference (otherwise the constructor
+will throw an exception). (See L</Default Attribute Values>.)
 
 =item type
 
 This attribute is read-only by users that are not sub-classes of this class.
 It identifies the class-type of the object, which is generally the last
 element of the class name (C<API>, C<Books>, etc.). It allows the
-B<Net::ISBNDB::Agent> sub-classes to make choices based on the type of the
-object. ("Type" in this context should not be confused with "types" as they
-pertain to mapping books, publishers, etc. to specific data classes.)
+B<WebService::ISBNDB::Agent> sub-classes to make choices based on the type of
+the object. ("Type" in this context should not be confused with "types" as
+they pertain to mapping books, publishers, etc. to specific data classes.)
 
 =back
 
@@ -1060,7 +1064,7 @@ data.
 
 =item get_agent
 
-Retrieve the current B<Net::ISBNDB::Agent>-derived object used for
+Retrieve the current B<WebService::ISBNDB::Agent>-derived object used for
 communication. Unless the agent was explicitly provided as an argument to
 the constructor, the agent object is constructed lazily: it is only
 instantiated upon the first call to this method.
@@ -1068,11 +1072,11 @@ instantiated upon the first call to this method.
 =item set_agent
 
 Set a new agent object for use when this object makes requests from the
-service. An agent object must derive from the B<Net::ISBNDB::Agent> class
-(that class itself cannot act as an agent). When a new agent is assigned,
-its B<protocol> method is called with the current value of the C<protocol>
-attribute of the object, to ensure that the agent matches the protocol. If
-not, an exception is thrown.
+service. An agent object must derive from the B<WebService::ISBNDB::Agent>
+class (that class itself cannot act as an agent). When a new agent is
+assigned, its B<protocol> method is called with the current value of the
+C<protocol> attribute of the object, to ensure that the agent matches the
+protocol. If not, an exception is thrown.
 
 =item get_agent_args
 
@@ -1147,7 +1151,7 @@ Get the set of default agent arguments, if any.
 Besides using these accessors to provide the defaults, you can also specify
 them when loading the module:
 
-    use Net::ISBNDB::API (api_key => 'abc123');
+    use WebService::ISBNDB::API (api_key => 'abc123');
 
 C<agent>, C<agent_args>, C<api_key> and C<protocol> are recognized at
 use-time.
@@ -1164,26 +1168,26 @@ The built-in data-types are:
 =item Authors
 
 This type covers the author data structures returned by B<isbndb.com>. It is
-covered in detail in L<Net::ISBNDB::API::Authors>.
+covered in detail in L<WebService::ISBNDB::API::Authors>.
 =item Books
 
 This type covers the book data structures returned by B<isbndb.com>. It is
-covered in detail in L<Net::ISBNDB::API::Books>.
+covered in detail in L<WebService::ISBNDB::API::Books>.
 
 =item Categories
 
 This type covers the category data structures returned by B<isbndb.com>. It
-is covered in detail in L<Net::ISBNDB::API::Categories>.
+is covered in detail in L<WebService::ISBNDB::API::Categories>.
 
 =item Publishers
 
 This type covers the publisher data structures returned by B<isbndb.com>. It
-is covered in detail in L<Net::ISBNDB::API::Publishers>.
+is covered in detail in L<WebService::ISBNDB::API::Publishers>.
 
 =item Subjects
 
 This type covers the subject data structures returned by B<isbndb.com>. It is
-covered in detail in L<Net::ISBNDB::API::Subjects>.
+covered in detail in L<WebService::ISBNDB::API::Subjects>.
 
 =back
 
@@ -1221,8 +1225,8 @@ All of the type-map methods may be called as static methods.
 
 =head2 Retrieving Data
 
-B<Net::ISBNDB::API> and its sub-classes support the retrieval of data in two
-ways: single-record and searching.
+B<WebService::ISBNDB::API> and its sub-classes support the retrieval of data
+in two ways: single-record and searching.
 
 Single-record retrieval is for getting just one result from the service,
 usually from a known unique key (such as fetching a book by the ISBN). The
@@ -1244,8 +1248,8 @@ The data-retrieving methods are:
 
 Finds a single record, using either a scalar identifying value (C<$IDENT>) or
 a hash reference (C<$ARGS>) with one or more key/value pairs. The value of
-C<$TYPE> tells C<Net::ISBNDB::API>) which data class to do the find-operation
-on. If the value is not a known type, an exception is thrown.
+C<$TYPE> tells C<WebService::ISBNDB::API>) which data class to do the
+find-operation on. If the value is not a known type, an exception is thrown.
 
 How the scalar value C<$IDENT> is used in the data-retrieval is dependent on
 the value of C<$TYPE>. See the documentation for the various data classes
@@ -1284,9 +1288,10 @@ implemented.
 
 =head1 SEE ALSO
 
-L<Class::Std>, L<Error>, L<Net::ISBNDB::Agent>, L<Net::ISBNDB::API::Authors>,
-L<Net::ISBNDB::API::Books>, L<Net::ISBNDB::API::Categories>,
-L<Net::ISBNDB::API::Publishers>, L<Net::ISBNDB::API::Subjects>
+L<Class::Std>, L<Error>, L<WebService::ISBNDB::Agent>,
+L<WebService::ISBNDB::API::Authors>, L<WebService::ISBNDB::API::Books>,
+L<WebService::ISBNDB::API::Categories>,
+L<WebService::ISBNDB::API::Publishers>, L<WebService::ISBNDB::API::Subjects>
 
 =head1 AUTHOR
 

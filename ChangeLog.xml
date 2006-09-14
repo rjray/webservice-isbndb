@@ -10,9 +10,57 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blackperl.com/XML/ChangeLog etc/ChangeLogML.xsd">
   <description>
-    Revision history for the Perl extension module Net::ISBNDB. This is an
-    API to communicate with the web service hosted by isbndb.com.
+    Revision history for the Perl extension module WebService::ISBNDB. This is
+    an API to communicate with the web service hosted by isbndb.com.
   </description>
+  <release version="0.12" tag="v0_12" date="2006-09-14T03:11:29-06:00">
+    <change>
+      <fileset>
+        <file path="lib/Net" action="DELETE" revision="11" />
+        <file path="lib/WebService" action="ADD" revision="11" />
+      </fileset>
+      <description>
+        Renamed lib/Net to lib/WebService.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB/API.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/Agent.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/API/Books.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/API/Publishers.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/API/Subjects.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/API/Categories.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/API/Authors.pm" revision="12" />
+        <file path="lib/WebService/ISBNDB/Agent/REST.pm" revision="12" />
+        <file path="MANIFEST" revision="12" />
+      </fileset>
+      <description>
+        Change all file-references and class-references from Net to
+	WebService.
+      </description>
+    </change>
+    <change>
+      <file path="t/00_load.t" revision="13" />
+      <description>
+        Change all file-references and class-references from Net to
+	WebService.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="Build.PL" revision="14" />
+        <file path="MANIFEST" revision="14" />
+        <file path="MANIFEST.SKIP" revision="14" />
+        <file path="Makefile.PL" revision="14" />
+      </fileset>
+      <description>
+        Changed the build controller from ExtUtils::MakeMaker to
+        Module::Build, and put in a compatibility layer for EU::MM.
+        Added Build.PL to MANIFEST and some more elements to MANIFEST.SKIP.
+      </description>
+    </change>
+  </release>
   <release version="0.11" tag="v0_11" date="2006-09-13T02:11:00-06:00">
     <change>
       <fileset>

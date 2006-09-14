@@ -1,6 +1,6 @@
-Net::ISBNDB - Access to the isbndb.com API
+WebService::ISBNDB - Access to the isbndb.com API
 
-Version: 0.11
+Version: 0.12
 
 WHAT IS IT
 
@@ -15,12 +15,13 @@ BUILDING/INSTALLING
 This package is set up to configure and build like a typical Perl extension.
 To build:
 
-        perl Makefile.PL
-        make && make test
+        perl Build.PL
+        ./Build
+	./Build test
 
-If Net::ISBNDB passes all tests, then:
+If WebService::ISBNDB passes all tests, then:
 
-        make install
+        ./Build install
 
 You may need super-user access to install.
 
@@ -32,5 +33,30 @@ Please send any reports of problems or bugs to rjray@blackperl.com
 
 CHANGES
 
-The initial release omitted several files from MANIFEST. This release is only
-to make sure they are distributed.
+This change renames the package from Net-ISBNDB to WebService-ISBNDB.
+
+Moved the lib/Net directory to lib/WebService.
+
+lib/WebService/ISBNDB/API.pm::
+lib/WebService/ISBNDB/API/Authors.pm:
+lib/WebService/ISBNDB/API/Books.pm:
+lib/WebService/ISBNDB/API/Categories.pm:
+lib/WebService/ISBNDB/API/Publishers.pm:
+lib/WebService/ISBNDB/API/Subjects.pm:
+lib/WebService/ISBNDB/Agent.pm:
+lib/WebService/ISBNDB/Agent/REST.pm:
+MANIFEST:
+Changed all file-references and class-references from Net to
+WebService.
+
+t/00_load.t:
+Changed all file-references and class-references from Net to
+WebService.
+
+Build.PL:
+MANIFEST:
+MANIFEST.SKIP:
+Makefile.PL:
+Changed the build control from ExtUtils::MakeMaker to Module::Build.
+Put in a compatibility layer for EU::MM.
+

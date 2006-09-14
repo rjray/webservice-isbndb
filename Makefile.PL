@@ -2,22 +2,11 @@
 #
 # $Id$
 #
-# This is the MakeMaker skeleton for Net::ISBNDB.
+# This is the MakeMaker skeleton for Net::ISBNDB. Now a wrapper around
+# Module::Build.
 #
 ###############################################################################
-use ExtUtils::MakeMaker;
 
-$CLEAN = 'pod2html-* *.html *.log t/*.log META.yml SIGNATURE *.ppd ';
-
-WriteMakefile(
-              (MM->can('signature_target') ? (SIGN => 1) : ()),
-              NAME      => 'Net::ISBNDB',
-              VERSION   => '0.11',
-              AUTHOR    => 'Randy J. Ray',
-              ABSTRACT  =>
-              'Data and communication classes for talking to isbndb.com',
-              PREREQ_PM => { XML::LibXML => 1.58,
-                             LWP         => 5.801 },
-              dist      => { COMPRESS => 'gzip -9f' },
-              clean     => { FILES => $CLEAN },
-             );
+use Module::Build::Compat;
+Module::Build::Compat->run_build_pl(args => \@ARGV);
+Module::Build::Compat->write_makefile();

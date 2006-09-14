@@ -1,3 +1,4 @@
+Build.PL				# Module::Build controller
 ChangeLog
 ChangeLog.xml
 Makefile.PL				# MakeMaker file

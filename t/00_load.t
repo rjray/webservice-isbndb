@@ -10,9 +10,14 @@ use Test::More;
 
 BEGIN
 {
-    @MODULES = qw(Net::ISBNDB::API Net::ISBNDB::API::Books
-                  Net::ISBNDB::API::Publishers Net::ISBNDB::API::Subjects
-                  Net::ISBNDB::Agent Net::ISBNDB::Agent::REST);
+    @MODULES = qw(WebService::ISBNDB::API
+                  WebService::ISBNDB::API::Authors
+                  WebService::ISBNDB::API::Books
+                  WebService::ISBNDB::API::Categories
+                  WebService::ISBNDB::API::Publishers
+                  WebService::ISBNDB::API::Subjects
+                  WebService::ISBNDB::Agent
+                  WebService::ISBNDB::Agent::REST);
 
     plan tests => scalar(@MODULES);
 }

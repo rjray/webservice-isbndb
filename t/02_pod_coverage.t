@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# $Id$
+
 use Test::More;
 
 eval "use Test::Pod::Coverage 1.00";

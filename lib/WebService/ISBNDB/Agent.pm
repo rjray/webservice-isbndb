@@ -56,10 +56,10 @@ use URI;
 use LWP::UserAgent;
 use HTTP::Request;
 
+$VERSION = "0.11";
+
 BEGIN
 {
-    $VERSION = "0.10";
-
     @PROTOS = (COREPROTOS);
     %PROTOS = map { $_ => __PACKAGE__ . "::$_" } @PROTOS;
 }
@@ -555,7 +555,8 @@ sub raw_request : RESTRICTED
 #   Sub Name:       _lr_trim
 #
 #   Description:    Do a right- and left-trim of whitespace and newlines off of
-#                   the passed-in string
+#                   the passed-in string. Also translate newlines and returns
+#                   within a string to spaces, and squeeze sequences of spaces.
 #
 #   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
 #                   $class    in      scalar    Ignored
@@ -570,6 +571,7 @@ sub _lr_trim
 
     $string =~ s/^[\s\n]*//;
     $string =~ s/[\s\n]*$//;
+    $string =~ tr/\n\r\t / /s;
 
     $string;
 }

@@ -23,6 +23,12 @@
 #                   set_isbn
 #                   get_publisher
 #                   normalize_args
+#                   set_change_time
+#                   set_change_time_sec
+#                   set_price_time
+#                   set_price_time_sec
+#                   set_prices
+#                   set_marc
 #
 #   Libraries:      Class::Std
 #                   Error
@@ -37,14 +43,20 @@ package WebService::ISBNDB::API::Books;
 use 5.6.0;
 use strict;
 use warnings;
-use vars qw($VERSION);
+use vars qw($VERSION $CAN_PARSE_DATES);
 use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
 use Business::ISBN qw(is_valid_checksum);
 
-$VERSION = "0.10";
+$VERSION = "0.20";
+
+BEGIN
+{
+    eval "use Date::Parse";
+    $CAN_PARSE_DATES = ($@) ? 0 : 1;
+}
 
 # Attributes for the Books class
 my %id             : ATTR(:get<id>   :init_arg<id>             :default<>);
@@ -56,6 +68,22 @@ my %authors        : ATTR(:init_arg<authors>                   :default<>);
 my %publisher_text : ATTR(:name<publisher_text>                :default<>);
 my %publisher      : ATTR(:init_arg<publisher> :set<publisher> :default<>);
 my %subjects       : ATTR(:init_arg<subjects>                  :default<>);
+my %dewey_decimal  : ATTR(:name<dewey_decimal>                 :default<>);
+my %dewey_decimal_normalized : ATTR(:name<dewey_decimal_normalized> :default<>);
+my %lcc_number     : ATTR(:name<lcc_number>                    :default<>);
+my %language       : ATTR(:name<language>                      :default<>);
+my %physical_description_text : ATTR(:name<physical_description_text> :default<>);
+my %edition_info   : ATTR(:name<edition_info>                  :default<>);
+my %change_time    : ATTR(:init_arg<change_time> :get<change_time> :default<>);
+my %change_time_sec : ATTR(:init_arg<change_time_sec> :get<change_time_sec> :default<>);
+my %price_time     : ATTR(:init_arg<price_time> :get<price_time> :default<>);
+my %price_time_sec : ATTR(:init_arg<price_time_sec> :get<price_time_sec> :default<>);
+my %summary        : ATTR(:name<summary>                       :default<>);
+my %notes          : ATTR(:name<notes>                         :default<>);
+my %urlstext       : ATTR(:name<urlstext>                      :default<>);
+my %awardstext     : ATTR(:name<awardstext>                    :default<>);
+my %prices         : ATTR(:init_arg<prices> :get<prices>       :default<>);
+my %marc           : ATTR(:init_arg<marc>   :get<marc>         :default<>);
 
 ###############################################################################
 #
@@ -79,6 +107,14 @@ sub BUILD
     my ($self, $id, $args) = @_;
 
     $self->set_type('Books');
+
+    if ($CAN_PARSE_DATES)
+    {
+        $args->{change_time_sec} = str2time($args->{change_time})
+            if ($args->{change_time} and ! $args->{change_time_sec});
+        $args->{price_time_sec} = str2time($args->{price_time})
+            if ($args->{price_time} and ! $args->{price_time_sec});
+    }
 
     return;
 }
@@ -255,7 +291,7 @@ sub normalize_args
     }
 
     # Add the "results" values that we want
-    $args->{results} = [ qw(subjects authors) ];
+    $args->{results} = [ qw(details prices marc texts subjects authors) ];
 
     $args;
 }
@@ -509,6 +545,192 @@ sub get_subjects
 
 ###############################################################################
 #
+#   Sub Name:       set_change_time
+#
+#   Description:    Set the change_time value; also update change_time_sec if
+#                   $CAN_PARSE_DATES is true.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $time     in      scalar    Time-string
+#
+#   Globals:        $CAN_PARSE_DATES
+#                   %change_time
+#                   %change_time_sec
+#
+#   Returns:        $self
+#
+###############################################################################
+sub set_change_time
+{
+    my ($self, $time) = @_;
+    my $id = ident $self;
+
+    $change_time{$id} = $time;
+    $change_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
+
+    $self;
+}
+
+###############################################################################
+#
+#   Sub Name:       set_change_time_sec
+#
+#   Description:    Set the change_time_sec value; also updates change_time.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $time     in      scalar    Time, in seconds
+#
+#   Globals:        %change_time
+#                   %change_time_sec
+#
+#   Returns:        $self
+#
+###############################################################################
+sub set_change_time_sec
+{
+    my ($self, $time) = @_;
+    my $id = ident $self;
+
+    $change_time_sec{$id} = $time;
+    my @parts = localtime $time;
+    $change_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02d",
+                                $parts[5] + 1900, # year
+                                $parts[4] + 1,    # month
+                                $parts[3],        # day
+                                @parts[2,1,0]);   # hours, mins, secs
+
+    $self;
+}
+
+###############################################################################
+#
+#   Sub Name:       set_change_time
+#
+#   Description:    Set the price_time value; also update price_time_sec if
+#                   $CAN_PARSE_DATES is true.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $time     in      scalar    Time-string
+#
+#   Globals:        $CAN_PARSE_DATES
+#                   %change_time
+#                   %change_time_sec
+#
+#   Returns:        $self
+#
+###############################################################################
+sub set_price_time
+{
+    my ($self, $time) = @_;
+    my $id = ident $self;
+
+    $price_time{$id} = $time;
+    $price_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
+
+    $self;
+}
+
+###############################################################################
+#
+#   Sub Name:       set_price_time_sec
+#
+#   Description:    Set the price_time_sec value; also updates price_time.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $time     in      scalar    Time, in seconds
+#
+#   Globals:        %price_time
+#                   %price_time_sec
+#
+#   Returns:        $self
+#
+###############################################################################
+sub set_price_time_sec
+{
+    my ($self, $time) = @_;
+    my $id = ident $self;
+
+    $price_time_sec{$id} = $time;
+    my @parts = localtime $time;
+    $price_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02d",
+                               $parts[5] + 1900, # year
+                               $parts[4] + 1,    # month
+                               $parts[3],        # day
+                               @parts[2,1,0]);   # hours, mins, secs
+
+    $self;
+}
+
+###############################################################################
+#
+#   Sub Name:       set_prices
+#
+#   Description:    Set new data for the price information. Checks that the
+#                   passed-in value is a list-ref, and that all elements are
+#                   hash refs.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $prices   in      listref   New price data
+#
+#   Globals:        %prices
+#
+#   Returns:        Success:    $self
+#                   Failure:    throws Error::Simple
+#
+###############################################################################
+sub set_prices
+{
+    my ($self, $prices) = @_;
+
+    throw Error::Simple('Argument to "set_prices" must be an array reference')
+        unless (ref($prices) eq 'ARRAY');
+    throw Error::Simple('All elements of the array ref to "set_prices" must ' .
+                        'be hash references')
+        if (grep(ref($_) ne 'HASH', @$prices));
+    $prices{ident $self} = _copy_aoh($prices);
+
+    $self;
+}
+
+###############################################################################
+#
+#   Sub Name:       set_marc
+#
+#   Description:    Set new data for the MARC information. Checks that the
+#                   passed-in value is a list-ref, and that all elements are
+#                   hash refs.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $marc     in      listref   New MARC data
+#
+#   Globals:        %marc
+#
+#   Returns:        Success:    $self
+#                   Failure:    throws Error::Simple
+#
+###############################################################################
+sub set_marc
+{
+    my ($self, $marc) = @_;
+
+    throw Error::Simple('Argument to "set_marc" must be an array reference')
+        unless (ref($marc) eq 'ARRAY');
+    throw Error::Simple('All elements of the array ref to "set_marc" must ' .
+                        'be hash references')
+        if (grep(ref($_) ne 'HASH', @$marc));
+    $marc{ident $self} = _copy_aoh($marc);
+
+    $self;
+}
+
+###############################################################################
+#
 #   Sub Name:       copy
 #
 #   Description:    Copy the Books-specific attributes over from target object
@@ -527,6 +749,22 @@ sub get_subjects
 #                   %publisher
 #                   %publisher_text
 #                   %subjects
+#                   %dewey_decimal
+#                   %dewey_decimal_normalized
+#                   %lcc_number
+#                   %language
+#                   %physical_description_text
+#                   %edition_info
+#                   %change_time
+#                   %change_time_sec
+#                   %price_time
+#                   %price_time_sec
+#                   %summary
+#                   %notes
+#                   %urlstext
+#                   %awardstext
+#                   %prices
+#                   %marc
 #
 #   Returns:        Success:    void
 #                   Failure:    throws Error::Simple
@@ -543,19 +781,49 @@ sub copy : CUMULATIVE
     my $id2 = ident $target;
 
     # Do the simple (scalar) attributes first
-    $id{$id1}             = $id{$id2};
-    $isbn{$id1}           = $isbn{$id2};
-    $title{$id1}          = $title{$id2};
-    $longtitle{$id1}      = $longtitle{$id2};
-    $authors_text{$id1}   = $authors_text{$id2};
-    $publisher_text{$id1} = $publisher_text{$id2};
-    $publisher{$id1}      = $publisher{$id2};
+    $id{$id1}                        = $id{$id2};
+    $isbn{$id1}                      = $isbn{$id2};
+    $title{$id1}                     = $title{$id2};
+    $longtitle{$id1}                 = $longtitle{$id2};
+    $authors_text{$id1}              = $authors_text{$id2};
+    $publisher_text{$id1}            = $publisher_text{$id2};
+    $publisher{$id1}                 = $publisher{$id2};
+    $dewey_decimal{$id1}             = $dewey_decimal{$id2};
+    $dewey_decimal_normalized{$id1}  = $dewey_decimal_normalized{$id2};
+    $lcc_number{$id1}                = $lcc_number{$id2};
+    $language{$id1}                  = $language{$id2};
+    $physical_description_text{$id1} = $physical_description_text{$id2};
+    $edition_info{$id1}              = $edition_info{$id2};
+    $change_time{$id1}               = $change_time{$id2};
+    $change_time_sec{$id1}           = $change_time_sec{$id2};
+    $price_time{$id1}                = $price_time{$id2};
+    $price_time_sec{$id1}            = $price_time_sec{$id2};
+    $summary{$id1}                   = $summary{$id2};
+    $notes{$id1}                     = $notes{$id2};
+    $urlstext{$id1}                  = $urlstext{$id2};
+    $awardstext{$id1}                = $awardstext{$id2};
 
     # Each of these must be tested, and references copied by value
-    $authors{$id1}  = [ @{$authors{$id2}}  ] if ref($authors{$id2});
-    $subjects{$id1} = [ @{$subjects{$id2}} ] if ref($subjects{$id2});
+    $authors{$id1}  = [ @{$authors{$id2}}  ]   if ref($authors{$id2});
+    $subjects{$id1} = [ @{$subjects{$id2}} ]   if ref($subjects{$id2});
+    $prices{$id1}   = _copy_aoh($prices{$id2}) if ref($prices{$id2});
+    $marc{$id1}     = _copy_aoh($marc{$id2})   if ref($marc{$id2});
 
     return;
+}
+
+# Copy the array-of-hashrefs and return the new
+sub _copy_aoh
+{
+    my $list = shift;
+
+    my $new = [];
+    for (@$list)
+    {
+        push(@$new, { %$_ });
+    }
+
+    $new;
 }
 
 1;
@@ -682,6 +950,168 @@ An array (stored as a reference) of the B<WebService::ISBNDB::API::Subjects>
 objects that refer to the subjects this book is associated with. As with the
 authors, the actual objects are not loaded until requested.
 
+=item dewey_decimal
+
+The book's Dewey Decimal classification number.
+
+=item dewey_decimal_normalized
+
+The normalized form of the Dewey Decimal number for the book.
+
+=item lcc_number
+
+The Library of Congress Classification number for the book.
+
+=item language
+
+The language the book is printed in. The form and content of this field may
+not be standardized.
+
+=item physical_description_text
+
+Text describing the physical dimensions of the book.
+
+=item edition_info
+
+Any additional information on the particular edition of the book.
+
+=item change_time
+
+A string representation of the time when this record was last changed. The
+string is in ISO 8601 form, with no explicit time-zone specified. UTC time
+is assumed in internal manipulations.
+
+=item change_time_sec
+
+If the B<Date::Parse> module is available, this attribute will hold the value
+from C<change_time>, converted to seconds since the UNIX Epoch. Otherwise,
+this attribute will always be C<undef>.
+
+=item price_time
+
+A string representation of the time when the price information for this
+record was last updated. As above, the string is in ISO 8601 format with no
+time-zone, and it assumed to be UTC internally.
+
+=item price_time_sec
+
+As with C<change_time_sec>, only for the price-change value. Requires the
+availability of B<Date::Parse>, or else the value will always be C<undef>.
+
+=item summary
+
+The content of the C<E<lt>SummaryE<gt>> tag, which is free-form text. The
+text has leading and trailing white-space removed, and all new-lines
+converted to spaces, to yield a single-line string value.
+
+=item notes
+
+Another free-form text field, similar to C<summary>, but less used.
+
+=item urlstext
+
+Fairly free-form text, used to specify URLs related to the book.
+
+=item awardstext
+
+More free-form text, this to specify any awards the book has received.
+
+=item prices
+
+If price information is available for the book, this attribute will contain
+a list-reference containing zero or more hash references. Each hash reference
+will have the following keys (all will be present on every hash reference, but
+some may be empty or C<undef>):
+
+=over 8
+
+=item store_isbn
+
+The ISBN for the book at the store, if different from the book's regular
+ISBN. Not set if the two are the same.
+
+=item store_title
+
+The book's title at the store, if different from the book's regular title.
+Not usually set if the two are the same.
+
+=item store_url
+
+URL for the book. This may be a relative URL, in which case it is relative to
+the store's website. If it is an absolute URL (complete URL), it is a
+redirector URL originating at B<isbndb.com>. The URL is used for purchasing
+the book, and the redirect URLs allow B<isbndb.com> to collect small
+commissions off of sales they facilitate, which in turn helps to keep their
+service available and free.
+
+=item store_id
+
+Unique identifier for the store.
+
+=item currency_code
+
+The code for the currency the price is expressed in.
+
+=item is_in_stock
+
+A boolean value indicating whether the book is in stock.
+
+=item is_new
+
+A boolean value indicating whether the book offered is new or used.
+
+=item currency_rate
+
+Currency rate against the US dollar, only set if the C<currency_code> is not
+C<USD>.
+
+=item price
+
+The price of the book (expressed in the currency indicated by C<currency_code>,
+above).
+
+=item check_time
+
+String representation of the time when this price was last checked. As with
+the other time-oriented values, this is in ISO 8601 format with no explicit
+time-zone.
+
+=item check_time_sec
+
+If the B<Date::Parse> package is available, this is the value of C<check_time>
+expressed in seconds, suitable for use with the Perl B<localtime> keyword.
+
+=back
+
+=item marc
+
+If MARC information is available for the book, this attribute will contain
+a list-reference containing zero or more hash references. Each hash reference
+will have the following keys (all will be present on every hash reference, but
+some may be empty or C<undef>):
+
+=over 8
+
+=item library_name
+
+Name of the library this record is taken from.
+
+=item last_update
+
+ISO 8601 string representing the last time the record was updated from the
+library.
+
+=item last_update_sec
+
+If B<Date::Parse> is available, this will be the C<last_update> attribute
+converted to seconds, measured from the UNIX epoch.
+
+=item marc_url
+
+The URL to the MARC record on the library's site.
+
+=back
+
 =back
 
 The following accessors are provided to manage these attributes:
@@ -768,6 +1198,149 @@ Set the list of subjects. The value must be a list-reference, and may contain
 either the objects themselves or the subject ID values as returned by the
 source. If the content is the ID values, then the next call to get_subjects()
 will resolve them to objects.
+
+=item get_dewey_decimal
+
+Get the Dewey Decimal number.
+
+=item set_dewey_decimal($DEWEY)
+
+Set the Dewey Decimal number.
+
+=item get_dewey_decimal_normalized
+
+Get the normalized Dewey Decimal number.
+
+=item set_dewey_decimal_normalized($DEWEY_NORM)
+
+Set the normalized Dewey Decimal number.
+
+=item get_lcc_number
+
+Get the Library of Congress Classification number.
+
+=item set_lcc_number($LCC)
+
+Set the Library of Congress Classification number.
+
+=item get_language
+
+Get the language code for the book's text.
+
+=item set_language($LANG)
+
+Set the language code.
+
+=item get_physical_description_text
+
+Get the book's physical description text.
+
+=item set_physical_description_text($PHYS)
+
+Set the book's physical description text.
+
+=item get_edition_info
+
+Get any information on the specific edition of the book.
+
+=item set_edition_info($INFO)
+
+Set the edition information for the book.
+
+=item get_change_time
+
+Get the change-time of the book record (an ISO 8601 string, no explicit
+time-zone, presumed to be UTC).
+
+=item set_change_time($TIME)
+
+Sets the change-time of the book record. If B<Parse::Date> is available, and
+the value passed in C<$TIME> is parsable, then the C<change_time_sec>
+attribute will also be updated with the equivalent value.
+
+=item get_change_time_sec
+
+Get the change-time as a number of seconds since the Epoch (as defined in
+UNIX terms, see L<Parse::Date>). This attribute is only set if the
+B<Date::Parse> module is available.
+
+=item set_change_time_sec($TIME)
+
+Set the seconds-since-Epoch representation of the change-time to the new
+value. This will also update the C<change_time> attribute, setting it to an
+ISO 8601-style string that is the textual representation of C<$TIME>.
+
+=item get_price_time
+
+=item set_price_time($TIME)
+
+=item get_price_time_sec
+
+=item set_price_time_sec($TIME)
+
+These are identical to the previous four, only they apply to the time-stamp
+marking when the price information was last updated. The same restrictions
+apply to the C<price_time_sec> attribute (B<Parse::Date> is required for it
+to be set when data is read from the source).
+
+=item get_summary
+
+Get the summary text for this book. The summary is free-form text that has
+has leading and trailing white-space removed, as well as having any internal
+new-lines or tabs converted to single spaces.
+
+=item set_summary($SUMMARY)
+
+Set the summary text to the new content in C<$SUMMARY>.
+
+=item get_notes
+
+Get the notes for the book. The notes are also free-form text, and are
+trimmed in the same fashion as C<summary>.
+
+=item set_notes($NOTES)
+
+Set the notes text for the book.
+
+=item get_urlstext
+
+Get the C<urlstext> attribute. This text should provide URLs related to
+the book, when present.
+
+=item set_urlstext($URLS)
+
+Set the C<urlstext> attribute to the new value.
+
+=item get_awardstext
+
+Get the awards-text data for the book. If present, this should refer to any
+awards the book has won.
+
+=item set_awardstext($AWARDS)
+
+Set the awards-text to the new data given.
+
+=item get_prices
+
+Get the price data for the book. This comes in the form of a list-reference
+of hash-references (see earlier description of the keys).
+
+=item set_prices($PRICELIST)
+
+Set the price data. The value passed in must be a list reference, and every
+element in the list mush be a hash reference. Otherwise an exception will be
+thrown.
+
+=item get_marc
+
+Get the MARC data for the book. MARC data comes in the form of a
+list-reference of hash-references (see above for description of the keys).
+
+=item set_marc($MARCLIST)
+
+Set the MARC data. The value passed in must be a list reference, and every
+element in the list mush be a hash reference. Otherwise an exception will be
+thrown.
 
 =back
 
@@ -905,7 +1478,7 @@ implemented.
 
 L<WebService::ISBNDB::API>, L<WebService::ISBNDB::API::Authors>,
 L<WebService::ISBNDB::API::Publishers>, L<WebService::ISBNDB::API::Subjects>,
-L<Business::ISBN>
+L<Business::ISBN>, L<Date::Parse>
 
 =head1 AUTHOR
 

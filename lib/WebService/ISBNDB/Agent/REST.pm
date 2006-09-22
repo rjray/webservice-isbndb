@@ -37,14 +37,20 @@ package WebService::ISBNDB::Agent::REST;
 use 5.6.0;
 use strict;
 use warnings;
-use vars qw($VERSION);
+use vars qw($VERSION $CAN_PARSE_DATES);
 use base 'WebService::ISBNDB::Agent';
 
 use Class::Std;
 use Error;
 use XML::LibXML;
 
-$VERSION = "0.10";
+$VERSION = "0.20";
+
+BEGIN
+{
+    eval "use Date::Parse";
+    $CAN_PARSE_DATES = ($@) ? 0 : 1;
+}
 
 my %baseurl    : ATTR(:name<baseurl>    :default<"http://isbndb.com">);
 my %authors    : ATTR(:name<authors>    :default<"/api/authors.xml">);
@@ -69,6 +75,30 @@ my %parse_table = (
     Publishers => \&parse_publishers,
     Subjects   => \&parse_subjects,
 );
+
+###############################################################################
+#
+#   Sub Name:       protocol
+#
+#   Description:    Return the name of the protocol we implement; if an
+#                   argument is passed in, test that the argument matches
+#                   our protocol.
+#
+#   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
+#                   $self     in      ref       Object
+#                   $test     in      scalar    If passed, test against our
+#                                                 protocol
+#
+#   Returns:        Success:    string or 1
+#                   Failure:    0 if we're testing and the protocol is no match
+#
+###############################################################################
+sub protocol
+{
+    my ($self, $test) = @_;
+
+    return $test ? $test =~ /^rest$/i : 'REST';
+}
 
 ###############################################################################
 #
@@ -380,6 +410,89 @@ sub parse_books : RESTRICTED
             }
 
             $bookref->{authors} = $authors;
+        }
+        # Get the Details tag to extract data from the attributes
+        if (($tmp) = $one_book->getElementsByTagName('Details'))
+        {
+            $bookref->{dewey_decimal} = $tmp->getAttribute('dewey_decimal');
+            $bookref->{dewey_decimal_normalized} =
+                $tmp->getAttribute('dewey_decimal_normalized');
+            $bookref->{lcc_number} = $tmp->getAttribute('lcc_number');
+            $bookref->{language} = $tmp->getAttribute('language');
+            $bookref->{physical_description_text} =
+                $tmp->getAttribute('physical_description_text');
+            $bookref->{edition_info} = $tmp->getAttribute('edition_info');
+            $bookref->{change_time} = $tmp->getAttribute('change_time');
+            $bookref->{price_time} = $tmp->getAttribute('price_time');
+            if ($CAN_PARSE_DATES)
+            {
+                $bookref->{change_time_sec} =
+                    str2time($bookref->{change_time});
+                $bookref->{price_time_sec} = str2time($bookref->{price_time});
+            }
+        }
+        # Look for summary text
+        if (($tmp) = $one_book->getElementsByTagName('Summary'))
+        {
+            $bookref->{summary} = $self->_lr_trim($tmp->textContent);
+        }
+        # Look for notes text
+        if (($tmp) = $one_book->getElementsByTagName('Notes'))
+        {
+            $bookref->{notes} = $self->_lr_trim($tmp->textContent);
+        }
+        # Look for URLs text
+        if (($tmp) = $one_book->getElementsByTagName('UrlsText'))
+        {
+            $bookref->{urlstext} = $self->_lr_trim($tmp->textContent);
+        }
+        # Look for awards text
+        if (($tmp) = $one_book->getElementsByTagName('AwardsText'))
+        {
+            $bookref->{awardstext} = $self->_lr_trim($tmp->textContent);
+        }
+        # MARC info block
+        if (($tmp) = $one_book->getElementsByTagName('MARCRecords'))
+        {
+            my $marcs = [];
+            foreach ($tmp->getElementsByTagName('MARC'))
+            {
+                push(@$marcs,
+                     { library_name => $_->getAttribute('library_name'),
+                       last_update  => $_->getAttribute('last_update'),
+                       marc_url     => $_->getAttribute('marc_url') });
+                if ($CAN_PARSE_DATES and $marcs->[$#$marcs]->{last_update})
+                {
+                    $marcs->[$#$marcs]->{last_update_sec} =
+                        str2time($marcs->[$#$marcs]->{last_update});
+                }
+            }
+            $bookref->{marc} = $marcs;
+        }
+        # Price info block
+        if (($tmp) = $one_book->getElementsByTagName('Prices'))
+        {
+            my $prices = [];
+            foreach ($tmp->getElementsByTagName('Price'))
+            {
+                push(@$prices,
+                     { store_isbn    => $_->getAttribute('store_isbn'),
+                       store_title   => $_->getAttribute('store_title'),
+                       store_url     => $_->getAttribute('store_url'),
+                       store_id      => $_->getAttribute('store_id'),
+                       currency_code => $_->getAttribute('currency_code'),
+                       is_in_stock   => $_->getAttribute('is_in_stock'),
+                       is_new        => $_->getAttribute('is_new'),
+                       currency_rate => $_->getAttribute('currency_rate'),
+                       price         => $_->getAttribute('price'),
+                       check_time    => $_->getAttribute('check_time') });
+                if ($CAN_PARSE_DATES and $prices->[$#$prices]->{check_time})
+                {
+                    $prices->[$#$prices]->{check_time_sec} =
+                        str2time($prices->[$#$prices]->{check_time});
+                }
+            }
+            $bookref->{prices} = $prices;
         }
 
         push(@$books, $class->new($bookref));
@@ -702,6 +815,12 @@ Returns the complete HTTP URI to use in making the request. C<$OBJ> is used
 to derive the type of data being fetched, and thus the base URI to use. The
 key/value pairs in the hash-reference provided by C<$ARGS> are used in the
 REST protocol to set the query parameters that govern the request.
+
+=item protocol([$TESTVAL])
+
+With no arguments, returns the name of this protocol as a simple string. If
+an argument is passed, it is tested against the protocol name to see if it
+is a match, returning a true or false value as appropriate.
 
 =back
 

@@ -19,6 +19,7 @@
 #                   set_authors
 #                   get_subjects
 #                   set_subjects
+#                   new
 #                   set_id
 #                   set_isbn
 #                   get_publisher
@@ -33,6 +34,7 @@
 #   Libraries:      Class::Std
 #                   Error
 #                   Business::ISBN
+#                   WebService::ISBNDB::API
 #
 #   Global Consts:  $VERSION
 #
@@ -43,6 +45,7 @@ package WebService::ISBNDB::API::Books;
 use 5.6.0;
 use strict;
 use warnings;
+no warnings 'redefine';
 use vars qw($VERSION $CAN_PARSE_DATES);
 use base 'WebService::ISBNDB::API';
 
@@ -87,6 +90,19 @@ my %marc           : ATTR(:init_arg<marc>   :get<marc>         :default<>);
 
 ###############################################################################
 #
+#   Sub Name:       new
+#
+#   Description:    Pass off to the super-class constructor, which handles
+#                   the special cases for arguments.
+#
+###############################################################################
+sub new
+{
+    shift->SUPER::new(@_);
+}
+
+###############################################################################
+#
 #   Sub Name:       BUILD
 #
 #   Description:    Builder for this class. See Class::Std.
@@ -110,9 +126,9 @@ sub BUILD
 
     if ($CAN_PARSE_DATES)
     {
-        $args->{change_time_sec} = str2time($args->{change_time})
+        $args->{change_time_sec} = str2time($args->{change_time}, 'UTC')
             if ($args->{change_time} and ! $args->{change_time_sec});
-        $args->{price_time_sec} = str2time($args->{price_time})
+        $args->{price_time_sec} = str2time($args->{price_time}, 'UTC')
             if ($args->{price_time} and ! $args->{price_time_sec});
     }
 
@@ -567,7 +583,7 @@ sub set_change_time
     my $id = ident $self;
 
     $change_time{$id} = $time;
-    $change_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
+    $change_time_sec{$id} = str2time($time, 'UTC') if $CAN_PARSE_DATES;
 
     $self;
 }
@@ -628,7 +644,7 @@ sub set_price_time
     my $id = ident $self;
 
     $price_time{$id} = $time;
-    $price_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
+    $price_time_sec{$id} = str2time($time, 'UTC') if $CAN_PARSE_DATES;
 
     $self;
 }
@@ -1055,6 +1071,12 @@ The code for the currency the price is expressed in.
 =item is_in_stock
 
 A boolean value indicating whether the book is in stock.
+
+=item is_historic
+
+A boolean value indicating whether the price this record describes is
+considered "historic". Any price older than 24 hours should generally be
+considered historic, even if this value is true.
 
 =item is_new
 

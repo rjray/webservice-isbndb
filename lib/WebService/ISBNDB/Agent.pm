@@ -33,7 +33,8 @@
 #                   set_agent
 #                   _lr_trim
 #
-#   Libraries:      Error
+#   Libraries:      Class::Std
+#                   Error
 #                   LWP::UserAgent
 #                   HTTP::Request
 #                   URI
@@ -56,7 +57,7 @@ use URI;
 use LWP::UserAgent;
 use HTTP::Request;
 
-$VERSION = "0.11";
+$VERSION = "0.20";
 
 BEGIN
 {
@@ -85,11 +86,11 @@ my %agent_args : ATTR(:name<agent_args> :default<>);
 ###############################################################################
 sub new
 {
-        my ($class, @argz) = @_;
-        my ($proto, $self);
+    my ($class, @argz) = @_;
+    my ($proto, $self);
 
     # Need to make sure $class is the name, not a reference, for later tests:
-        $class = ref($class) || $class;
+    $class = ref($class) || $class;
 
     # If $class matches this package, then they must specify a protocol
     # as the leading argument (currently only 'REST')
@@ -100,10 +101,10 @@ sub new
             unless $class = $class->class_for_protocol($proto);
         # Make sure it is loaded
         eval "require $class;";
-        $self = $class->new(@argz);
     }
+    my $args = shift(@argz) || {};
 
-    $class->SUPER::new(@argz);
+    return $proto ? $class->new($args) : $class->SUPER::new($args);
 }
 
 ###############################################################################
@@ -188,7 +189,8 @@ sub set_agent
     my ($self, $agent) = @_;
 
     throw Error::Simple("New agent must be derived from LWP::UserAgent")
-        unless (ref($agent) and $agent->isa('LWP::UserAgent'));
+        unless (! defined $agent or
+                (ref($agent) and $agent->isa('LWP::UserAgent')));
 
     $agent{ident $self} = $agent;
 
@@ -222,6 +224,7 @@ sub add_protocol
 {
     my ($class, $proto, $pack) = @_;
 
+    $proto = uc $proto;
     throw Error::Simple("No package specfied for $proto") unless $pack;
 
     push(@PROTOS, $proto);
@@ -569,9 +572,9 @@ sub _lr_trim
 {
     my ($class, $string) = @_;
 
+    $string =~ tr/\n\r\t / /s;
     $string =~ s/^[\s\n]*//;
     $string =~ s/[\s\n]*$//;
-    $string =~ tr/\n\r\t / /s;
 
     $string;
 }

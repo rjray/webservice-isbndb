@@ -15,6 +15,7 @@
 #
 #   Functions:      BUILD
 #                   copy
+#                   new
 #                   set_id
 #                   get_parent
 #                   get_sub_categories
@@ -24,6 +25,7 @@
 #
 #   Libraries:      Class::Std
 #                   Error
+#                   WebService::ISBNDB::API
 #
 #   Global Consts:  $VERSION
 #
@@ -34,13 +36,14 @@ package WebService::ISBNDB::API::Categories;
 use 5.6.0;
 use strict;
 use warnings;
+no warnings 'redefine';
 use vars qw($VERSION);
 use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
 
-$VERSION = "0.10";
+$VERSION = "0.20";
 
 my %id             : ATTR(:init_arg<id>     :get<id>     :default<>);
 my %parent         : ATTR(:init_arg<parent> :set<parent> :default<>);
@@ -49,6 +52,19 @@ my %summary        : ATTR(:name<summary>                 :default<>);
 my %depth          : ATTR(:name<depth>                   :default<>);
 my %element_count  : ATTR(:name<element_count>           :default<>);
 my %sub_categories : ATTR(:init_arg<sub_categories>      :default<>);
+
+###############################################################################
+#
+#   Sub Name:       new
+#
+#   Description:    Pass off to the super-class constructor, which handles
+#                   the special cases for arguments.
+#
+###############################################################################
+sub new
+{
+    shift->SUPER::new(@_);
+}
 
 ###############################################################################
 #

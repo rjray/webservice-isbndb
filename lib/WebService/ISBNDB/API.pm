@@ -14,16 +14,37 @@
 #                   Publishers, Subjects (and the others as isbndb.com adds
 #                   them to the API).
 #
-#   Functions:      add_type
+#   Functions:      _find
+#                   _search
+#                   add_type
+#                   BUILD
 #                   class_for_type
+#                   copy
+#                   find
 #                   get_agent
+#                   get_api_key
+#                   get_default_agent
+#                   get_default_agent_args
+#                   get_default_api_key
+#                   get_default_protocol
+#                   get_protocol
+#                   get_type
+#                   import
 #                   new
+#                   normalize_args
 #                   remove_type
+#                   search
 #                   set_agent
+#                   set_default_agent
+#                   set_default_agent_args
+#                   set_default_api_key
+#                   set_default_protocol
 #                   set_protocol
 #                   set_type
 #
-#   Libraries:      Error
+#   Libraries:      Class::Std
+#                   Error
+#                   WebService::ISBNDB::Agent
 #
 #   Global Consts:  $VERSION
 #                   COREPROTOS
@@ -44,17 +65,18 @@ use Class::Std;
 use Error;
 require WebService::ISBNDB::Agent;
 
+$VERSION = "0.20";
+
 BEGIN
 {
     @ISA = qw(Class::Std);
-    $VERSION = "0.10";
 
     @TYPES = (CORETYPES);
     %TYPES = map { $_ => __PACKAGE__ . "::$_" } @TYPES;
 }
 
 # Attributes for the ::API class, shared by all the children
-my %protocol   : ATTR(:init_arg<protocol>                    :default<REST>);
+my %protocol   : ATTR(:init_arg<protocol>                    :default<>);
 my %api_key    : ATTR(:init_arg<api_key> :set<api_key>       :default<>);
 my %type       : ATTR(:init_arg<type>                        :default<>);
 my %agent      : ATTR(:init_arg<agent>                       :default<>);
@@ -111,8 +133,8 @@ sub import
 ###############################################################################
 sub new
 {
-        my ($class, @argz) = @_;
-        my ($type, $self, %obj_defaults, $args, $new);
+    my ($class, @argz) = @_;
+    my ($type, $self, %obj_defaults, $args, $new);
 
     # Need to make sure $class is the name, not a reference, for later tests.
     # But if it is a reference, we should also save the protocol and api_key
@@ -121,13 +143,13 @@ sub new
     {
         $obj_defaults{protocol} = $class->get_protocol;
         $obj_defaults{api_key} = $class->get_api_key;
-            $class = ref($class);
+        $class = ref($class);
     }
 
     # If $class matches this package, then they are allowed to specify a type
     # as the leading argument (Books, Publishers, etc.)
     $type = shift(@argz) if (($class eq __PACKAGE__) and (@argz > 1));
-    $args = shift @argz;
+    $args = shift @argz || {};
 
     if ($type)
     {
@@ -137,14 +159,13 @@ sub new
         eval "require $type;";
     }
 
-    # Make sure that certain basic parameters are always set. Protocol, API
-    # key, agent and agent args.
+    # Set any of the defaults if $class came in as an object
     if (ref $args)
     {
-        foreach (qw(protocol api_key agent agent_args))
+        foreach (qw(protocol api_key))
         {
-            $args->{$_} = $obj_defaults{$_} || $DEFAULTS{$_}
-                unless $args->{$_};
+            $args->{$_} = $obj_defaults{$_} if ($obj_defaults{$_} and
+                                                ! $args->{$_});
         }
     }
 
@@ -208,10 +229,13 @@ sub BUILD
     }
 
     # All protocols are all-uppercase, so just make sure as we assign it
-    $protocol{$id} = uc $args->{protocol};
-    $agent{$id}    = $args->{agent};
+    $protocol{$id}   = uc $args->{protocol} || $self->get_default_protocol;
+    $agent{$id}      = $args->{agent};
+    # Fall back to the defaults here
+    $api_key{$id}    = $self->get_default_api_key unless $api_key{$id};
+    $agent_args{$id} = $self->get_default_agent_args unless $agent_args{$id};
     # Remove these so they aren't further processed
-    delete @$args{qw(protocol agent)};
+    delete @$args{qw(protocol agent api_key agent_args)};
 
     return;
 }
@@ -413,14 +437,6 @@ sub set_protocol
 
     # Make sure $proto is all-uppercase
     $proto = uc $proto;
-
-    # First test if $agent is set, and if so whether it matches $proto
-    if ($agent)
-    {
-        throw Error::Simple('New agent object must derive from ' .
-                            'WebService::ISBNDB::Agent')
-            unless (ref $agent and $agent->isa('WebService::ISBNDB::Agent'));
-    }
 
     $protocol{ident $self} = $proto;
     # set_agent() tests the object's value of protocol against itself, so this
@@ -809,7 +825,8 @@ sub set_default_agent
 
     throw Error::Simple("Argument to 'set_default_agent' must be an object " .
                         "of or derived from LWP::UserAgent")
-        unless (ref $agent and $agent->isa('LWP::UserAgent'));
+        unless (! defined $agent or
+                (ref $agent and $agent->isa('LWP::UserAgent')));
 
     $DEFAULTS{agent} = $agent;
     return;

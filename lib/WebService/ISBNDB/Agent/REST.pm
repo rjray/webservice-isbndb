@@ -26,6 +26,7 @@
 #   Libraries:      Class::Std
 #                   Error
 #                   XML::LibXML
+#                   WebService::ISBNDB::Agent
 #
 #   Global Consts:  $VERSION
 #                   $BASEURL
@@ -37,6 +38,7 @@ package WebService::ISBNDB::Agent::REST;
 use 5.6.0;
 use strict;
 use warnings;
+no warnings 'redefine';
 use vars qw($VERSION $CAN_PARSE_DATES);
 use base 'WebService::ISBNDB::Agent';
 
@@ -75,6 +77,19 @@ my %parse_table = (
     Publishers => \&parse_publishers,
     Subjects   => \&parse_subjects,
 );
+
+###############################################################################
+#
+#   Sub Name:       new
+#
+#   Description:    Pass off to the super-class constructor, which handles
+#                   the special cases for arguments.
+#
+###############################################################################
+sub new
+{
+    shift->SUPER::new(@_);
+}
 
 ###############################################################################
 #
@@ -213,6 +228,8 @@ sub request : RESTRICTED
     throw Error::Simple("XML parse error: $@") if $@;
 
     my $top_elt = $dom->documentElement();
+    throw Error::Simple("Service error: " . $self->_lr_trim($dom->textContent))
+        if (($dom) = $top_elt->getElementsByTagName('ErrorMessage'));
     my ($value, $stats) = $parse_table{$obj->get_type}->($self, $top_elt);
 
     $obj->copy(ref($value) ? $value->[0] : $value) if $overwrite;
@@ -296,7 +313,7 @@ sub parse_authors : RESTRICTED
             $authorref->{categories} = $categories;
         }
         # Look for a list of subjects. We save those in a special format, here.
-        if (($tmp) = $one_author->getElementsByTagName('Subject'))
+        if (($tmp) = $one_author->getElementsByTagName('Subjects'))
         {
             my $subjects = [];
             foreach ($tmp->getElementsByTagName('Subject'))
@@ -427,8 +444,9 @@ sub parse_books : RESTRICTED
             if ($CAN_PARSE_DATES)
             {
                 $bookref->{change_time_sec} =
-                    str2time($bookref->{change_time});
-                $bookref->{price_time_sec} = str2time($bookref->{price_time});
+                    str2time($bookref->{change_time}, 'UTC');
+                $bookref->{price_time_sec} =
+                    str2time($bookref->{price_time}, 'UTC');
             }
         }
         # Look for summary text
@@ -464,7 +482,7 @@ sub parse_books : RESTRICTED
                 if ($CAN_PARSE_DATES and $marcs->[$#$marcs]->{last_update})
                 {
                     $marcs->[$#$marcs]->{last_update_sec} =
-                        str2time($marcs->[$#$marcs]->{last_update});
+                        str2time($marcs->[$#$marcs]->{last_update}, 'UTC');
                 }
             }
             $bookref->{marc} = $marcs;
@@ -482,6 +500,7 @@ sub parse_books : RESTRICTED
                        store_id      => $_->getAttribute('store_id'),
                        currency_code => $_->getAttribute('currency_code'),
                        is_in_stock   => $_->getAttribute('is_in_stock'),
+                       is_historic   => $_->getAttribute('is_historic'),
                        is_new        => $_->getAttribute('is_new'),
                        currency_rate => $_->getAttribute('currency_rate'),
                        price         => $_->getAttribute('price'),
@@ -489,7 +508,7 @@ sub parse_books : RESTRICTED
                 if ($CAN_PARSE_DATES and $prices->[$#$prices]->{check_time})
                 {
                     $prices->[$#$prices]->{check_time_sec} =
-                        str2time($prices->[$#$prices]->{check_time});
+                        str2time($prices->[$#$prices]->{check_time}, 'UTC');
                 }
             }
             $bookref->{prices} = $prices;
@@ -717,7 +736,7 @@ sub parse_subjects : RESTRICTED
         # are all attributes of SubjectData
         $subjectref->{id} = $one_subject->getAttribute('subject_id');
         $subjectref->{book_count} = $one_subject->getAttribute('book_count');
-        $subjectref->{marc_field} = $one_subject->getAttribute('marc_count');
+        $subjectref->{marc_field} = $one_subject->getAttribute('marc_field');
         $subjectref->{marc_indicator_1} =
             $one_subject->getAttribute('marc_indicator_1');
         $subjectref->{marc_indicator_2} =
@@ -821,6 +840,18 @@ REST protocol to set the query parameters that govern the request.
 With no arguments, returns the name of this protocol as a simple string. If
 an argument is passed, it is tested against the protocol name to see if it
 is a match, returning a true or false value as appropriate.
+
+=back
+
+The class also implements a constructor method, which is needed to co-operate
+with the parent class under B<Class::Std> structure. You should generally not
+have to call the constructor directly:
+
+=over 4
+
+=item new([$ARGS])
+
+Calls into the parent constructor with any arguments passed in.
 
 =back
 

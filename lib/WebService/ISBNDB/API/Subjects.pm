@@ -13,6 +13,7 @@
 #   Description:    Specialization of the API class for subjects data.
 #
 #   Functions:      BUILD
+#                   new
 #                   copy
 #                   set_id
 #                   get_categories
@@ -22,6 +23,7 @@
 #
 #   Libraries:      Class::Std
 #                   Error
+#                   WebService::ISBNDB::API
 #
 #   Global Consts:  $VERSION
 #
@@ -32,13 +34,14 @@ package WebService::ISBNDB::API::Subjects;
 use 5.6.0;
 use strict;
 use warnings;
+no warnings 'redefine';
 use vars qw($VERSION);
 use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
 
-$VERSION = "0.10";
+$VERSION = "0.20";
 
 my %id               : ATTR(:init_arg<id> :get<id>  :default<>);
 my %name             : ATTR(:name<name>             :default<>);
@@ -47,6 +50,19 @@ my %marc_field       : ATTR(:name<marc_field>       :default<>);
 my %marc_indicator_1 : ATTR(:name<marc_indicator_1> :default<>);
 my %marc_indicator_2 : ATTR(:name<marc_indicator_2> :default<>);
 my %categories       : ATTR(:init_arg<categories>   :default<>);
+
+###############################################################################
+#
+#   Sub Name:       new
+#
+#   Description:    Pass off to the super-class constructor, which handles
+#                   the special cases for arguments.
+#
+###############################################################################
+sub new
+{
+    shift->SUPER::new(@_);
+}
 
 ###############################################################################
 #
@@ -255,7 +271,7 @@ sub find
 
     # First, see if we were passed a single scalar for an argument. If so, it
     # needs to become the id argument
-    $args = { publisher_id => $args } unless (ref $args);
+    $args = { subject_id => $args } unless (ref $args);
 
     $self->SUPER::find($args);
 }
@@ -329,7 +345,7 @@ sub normalize_args
             next;
         }
 
-        throw Error::Simple("'$key' is not a valid search-key for publishers");
+        throw Error::Simple("'$key' is not a valid search-key for subjects");
     }
 
     # Add the "results" values that we want

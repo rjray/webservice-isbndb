@@ -14,6 +14,7 @@
 #                   the Publishers class of objects
 #
 #   Functions:      BUILD
+#                   new
 #                   find
 #                   set_id
 #                   set_categories
@@ -22,6 +23,7 @@
 #
 #   Libraries:      Class::Std
 #                   Error
+#                   WebService::ISBNDB::API
 #
 #   Global Consts:  $VERSION
 #
@@ -32,18 +34,32 @@ package WebService::ISBNDB::API::Publishers;
 use 5.6.0;
 use strict;
 use warnings;
+no warnings 'redefine';
 use vars qw($VERSION);
 use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
 
-$VERSION = "0.10";
+$VERSION = "0.20";
 
 my %id         : ATTR(:init_arg<id> :get<id> :default<>);
 my %name       : ATTR(:name<name>            :default<>);
 my %location   : ATTR(:name<location>        :default<>);
 my %categories : ATTR(:init_arg<categories>  :default<>);
+
+###############################################################################
+#
+#   Sub Name:       new
+#
+#   Description:    Pass off to the super-class constructor, which handles
+#                   the special cases for arguments.
+#
+###############################################################################
+sub new
+{
+    shift->SUPER::new(@_);
+}
 
 ###############################################################################
 #

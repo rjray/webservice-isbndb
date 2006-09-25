@@ -1,5 +1,79 @@
 Revision history for Perl extension WebService-ISBNDB.
 
+0.20	Sun Sep 24 20:45:08 MDT 2006
+
+	lib/WebService/ISBNDB/Agent.pm:
+	Extended the _lr_trim() method to also translate newlines to spaces
+	and squeeze sequences of spaces.
+
+	Build.PL:
+	Added dependency specification for other non-core modules this
+	module uses (Class::Std, Error, Business::ISBN). Added a "recommends"
+	spec for Date::Parse, which is used only if available. Bumped the
+	dist version number.
+
+	t/00_signature.t:
+	t/01_pod.t:
+	t/02_pod_coverage.t:
+	Added svn Id keywork for tracking purposes.
+
+	lib/WebService/ISBNDB/API/Books.pm:
+	lib/WebService/ISBNDB/Agent/REST.pm:
+	Added the rest of the data isbndb.com makes available for books.
+
+	t/05_api_baseclass.t:
+	t/07_agent_baseclass.t:
+	t/10_categories.t:
+	t/20_publishers.t:
+	t/30_subjects.t:
+	t/40_authors.t:
+	t/50_books.t:
+	t/Authors-person_id=kulchenko_pavel.xml:
+	t/Authors-person_id=ray_randy_j.xml:
+	t/Books-isbn=0596002068.xml:
+	t/Categories-category_id=alphabetically.authors.r.a.y.xml:
+	t/Categories-category_id=alphabetically.publishers.o.r.xml:
+	t/Categories-category_id=computers.programming.languages.perl.xml:
+	t/Categories-category_id=science.astronomy.xml:
+	t/Categories-category_id=science.biology.xml:
+	t/Categories-category_id=science.botany.xml:
+	t/Categories-category_id=science.chemistry.xml:
+	t/Categories-category_id=science.computer_science.xml:
+	t/Categories-category_id=science.earth_sciences.xml:
+	t/Categories-category_id=science.economics.xml:
+	t/Categories-category_id=science.geography.xml:
+	t/Categories-category_id=science.mathematics.xml:
+	t/Categories-category_id=science.mineralogy.xml:
+	t/Categories-category_id=science.paleontology.xml:
+	t/Categories-category_id=science.philosophy.xml:
+	t/Categories-category_id=science.physics.xml:
+	t/Categories-category_id=science.political_science.xml:
+	t/Categories-category_id=science.psychology.xml:
+	t/Categories-category_id=science.social_sciences.xml:
+	t/Categories-category_id=science.sociology.xml:
+	t/Categories-category_id=science.xml:
+	t/DUMMY.pm:
+	t/Publishers-publisher_id=oreilly.xml:
+	t/Subjects-subject_id=internet_programming.xml:
+	t/Subjects-subject_id=perl_computer_program_language.xml:
+	t/testing.key:
+	t/util.pl:
+	A more comprehensive suite of tests. Includes XML files that are
+	snapshots of the corresponding data from isbndb.com, so that the tests
+	don't keep using up the daily allotment of requests for the key. Also
+	includes DUMMY.pm, a dummy connector for WebService::ISBNDB::Agent that
+	reads the XML from the snapshot files.
+
+	lib/WebService/ISBNDB/API.pm:
+	lib/WebService/ISBNDB/API/Authors.pm:
+	lib/WebService/ISBNDB/API/Books.pm:
+	lib/WebService/ISBNDB/API/Categories.pm:
+	lib/WebService/ISBNDB/API/Publishers.pm:
+	lib/WebService/ISBNDB/API/Subjects.pm:
+	lib/WebService/ISBNDB/Agent.pm:
+	lib/WebService/ISBNDB/Agent/REST.pm:
+	Bug-fixes directly resulting from the unit-test suites.
+
 0.12	Thu Sep 14 03:11:29 MDT 2006
 
 	Moved the lib/Net directory to lib/WebService.

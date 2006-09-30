@@ -443,10 +443,8 @@ sub parse_books : RESTRICTED
             $bookref->{price_time} = $tmp->getAttribute('price_time');
             if ($CAN_PARSE_DATES)
             {
-                $bookref->{change_time_sec} =
-                    str2time($bookref->{change_time}, 'UTC');
-                $bookref->{price_time_sec} =
-                    str2time($bookref->{price_time}, 'UTC');
+                $bookref->{change_time_sec} = str2time($bookref->{change_time});
+                $bookref->{price_time_sec} = str2time($bookref->{price_time});
             }
         }
         # Look for summary text
@@ -482,7 +480,7 @@ sub parse_books : RESTRICTED
                 if ($CAN_PARSE_DATES and $marcs->[$#$marcs]->{last_update})
                 {
                     $marcs->[$#$marcs]->{last_update_sec} =
-                        str2time($marcs->[$#$marcs]->{last_update}, 'UTC');
+                        str2time($marcs->[$#$marcs]->{last_update});
                 }
             }
             $bookref->{marc} = $marcs;
@@ -508,7 +506,7 @@ sub parse_books : RESTRICTED
                 if ($CAN_PARSE_DATES and $prices->[$#$prices]->{check_time})
                 {
                     $prices->[$#$prices]->{check_time_sec} =
-                        str2time($prices->[$#$prices]->{check_time}, 'UTC');
+                        str2time($prices->[$#$prices]->{check_time});
                 }
             }
             $bookref->{prices} = $prices;

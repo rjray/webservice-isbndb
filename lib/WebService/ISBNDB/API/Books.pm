@@ -126,9 +126,9 @@ sub BUILD
 
     if ($CAN_PARSE_DATES)
     {
-        $args->{change_time_sec} = str2time($args->{change_time}, 'UTC')
+        $args->{change_time_sec} = str2time($args->{change_time})
             if ($args->{change_time} and ! $args->{change_time_sec});
-        $args->{price_time_sec} = str2time($args->{price_time}, 'UTC')
+        $args->{price_time_sec} = str2time($args->{price_time})
             if ($args->{price_time} and ! $args->{price_time_sec});
     }
 
@@ -583,7 +583,7 @@ sub set_change_time
     my $id = ident $self;
 
     $change_time{$id} = $time;
-    $change_time_sec{$id} = str2time($time, 'UTC') if $CAN_PARSE_DATES;
+    $change_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
 
     $self;
 }
@@ -611,7 +611,7 @@ sub set_change_time_sec
 
     $change_time_sec{$id} = $time;
     my @parts = localtime $time;
-    $change_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02d",
+    $change_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02dZ",
                                 $parts[5] + 1900, # year
                                 $parts[4] + 1,    # month
                                 $parts[3],        # day
@@ -622,7 +622,7 @@ sub set_change_time_sec
 
 ###############################################################################
 #
-#   Sub Name:       set_change_time
+#   Sub Name:       set_price_time
 #
 #   Description:    Set the price_time value; also update price_time_sec if
 #                   $CAN_PARSE_DATES is true.
@@ -632,8 +632,8 @@ sub set_change_time_sec
 #                   $time     in      scalar    Time-string
 #
 #   Globals:        $CAN_PARSE_DATES
-#                   %change_time
-#                   %change_time_sec
+#                   %price_time
+#                   %price_time_sec
 #
 #   Returns:        $self
 #
@@ -644,7 +644,7 @@ sub set_price_time
     my $id = ident $self;
 
     $price_time{$id} = $time;
-    $price_time_sec{$id} = str2time($time, 'UTC') if $CAN_PARSE_DATES;
+    $price_time_sec{$id} = str2time($time) if $CAN_PARSE_DATES;
 
     $self;
 }
@@ -672,7 +672,7 @@ sub set_price_time_sec
 
     $price_time_sec{$id} = $time;
     my @parts = localtime $time;
-    $price_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02d",
+    $price_time{$id} = sprintf("%4d-%02d-%02dT%02d:%02d:%02dZ",
                                $parts[5] + 1900, # year
                                $parts[4] + 1,    # month
                                $parts[3],        # day

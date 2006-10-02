@@ -46,7 +46,7 @@ use Class::Std;
 use Error;
 use XML::LibXML;
 
-$VERSION = "0.20";
+$VERSION = "0.30";
 
 BEGIN
 {

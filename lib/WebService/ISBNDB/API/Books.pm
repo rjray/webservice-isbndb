@@ -53,7 +53,7 @@ use Class::Std;
 use Error;
 use Business::ISBN qw(is_valid_checksum);
 
-$VERSION = "0.20";
+$VERSION = "0.30";
 
 BEGIN
 {

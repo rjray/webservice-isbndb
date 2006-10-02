@@ -33,9 +33,9 @@ open my $fh, "< $dir/Books-isbn=0596002068.xml"
 my $body = join('', <$fh>);
 close($fh);
 my $change_time = ($body =~ /change_time="(.*?)"/)[0];
-my $change_time_sec = $CAN_PARSE_DATES ? str2time($change_time, 'UTC') : 0;
+my $change_time_sec = $CAN_PARSE_DATES ? str2time($change_time) : 0;
 my $price_time = ($body =~ /price_time="(.*?)"/)[0];
-my $price_time_sec = $CAN_PARSE_DATES ? str2time($price_time, 'UTC') : 0;
+my $price_time_sec = $CAN_PARSE_DATES ? str2time($price_time) : 0;
 my @subj = ($body =~ /Subject\s+subject_id="(.*?)"/g);
 my @auth = ($body =~ /Person\s+person_id="(.*?)"/g);
 my @marc = ($body =~ /<MARC\s+(.*?)\s+\/>/g);
@@ -119,7 +119,7 @@ for $idx (0 .. $#$marcs)
     my $library_name = ($marc[$idx] =~ /library_name="(.*?)"/)[0];
     my $marc_url = ($marc[$idx] =~ /marc_url="(.*?)"/)[0];
     my $last_update = ($marc[$idx] =~ /last_update="(.*?)"/)[0];
-    my $last_update_sec = $CAN_PARSE_DATES ? str2time($last_update, 'UTC') : 0;
+    my $last_update_sec = $CAN_PARSE_DATES ? str2time($last_update) : 0;
 
     is($marcs->[$idx]->{library_name}, $library_name, "MARC $idx library name");
     is($marcs->[$idx]->{marc_url}, $marc_url, "MARC $idx URL");
@@ -146,7 +146,7 @@ for $idx (0 .. $#$prices)
     my $is_historic = ($price[$idx] =~ /is_historic="(.*?)"/)[0];
     my $is_new = ($price[$idx] =~ /is_new="(.*?)"/)[0];
     my $check_time = ($price[$idx] =~ /check_time="(.*?)"/)[0];
-    my $check_time_sec = $CAN_PARSE_DATES ? str2time($check_time, 'UTC') : 0;
+    my $check_time_sec = $CAN_PARSE_DATES ? str2time($check_time) : 0;
     my $currency_rate = ($price[$idx] =~ /currency_rate="(.*?)"/)[0];
     my $price = ($price[$idx] =~ /price="(.*?)"/)[0];
 

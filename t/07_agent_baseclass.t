@@ -33,13 +33,13 @@ like($@, '/has not overridden/i', 'Base-class version of protocol()');
 # Start testing agent creation, and agent_args influence.
 my $agent = WebService::ISBNDB::Agent->new('REST');
 isa_ok($agent, 'WebService::ISBNDB::Agent', 'Agent object');
-my $ua = $agent->get_agent;
+my $ua = $agent->get_useragent;
 isa_ok($ua, 'LWP::UserAgent', 'get_agent return');
 like($ua->agent, '/libwww-perl/i', 'LWP::UA instance default ident string');
 
-$agent->set_agent(undef);
+$agent->set_useragent(undef);
 $agent->set_agent_args({ agent => "test/0" });
-$ua = $agent->get_agent;
+$ua = $agent->get_useragent;
 isa_ok($ua, 'LWP::UserAgent', 'get_agent/LWP::UserAgent instance with args');
 is($ua->agent, 'test/0', 'LWP::UA instance pre-set ident string');
 undef $agent;
@@ -48,7 +48,7 @@ undef $agent;
 my $api = WebService::ISBNDB::API->new();
 $agent = $api->get_agent;
 isa_ok($agent, 'WebService::ISBNDB::Agent::REST');
-isa_ok($agent->get_agent, 'LWP::UserAgent');
+isa_ok($agent->get_useragent, 'LWP::UserAgent');
 
 $agent = WebService::ISBNDB::API->get_default_agent;
 is($agent, WebService::ISBNDB::API->get_agent,
@@ -57,7 +57,8 @@ WebService::ISBNDB::API->set_default_agent(undef);
 WebService::ISBNDB::API->set_default_agent_args({ agent => "test/0" });
 $agent = WebService::ISBNDB::API->get_default_agent;
 isa_ok($agent, 'WebService::ISBNDB::Agent::REST', 'Default-args agent');
-isa_ok($agent->get_agent, 'LWP::UserAgent', 'Default-args agent UA');
-is($agent->get_agent->agent, 'test/0', 'Ident string set from default args');
+isa_ok($agent->get_useragent, 'LWP::UserAgent', 'Default-args agent UA');
+is($agent->get_useragent->agent, 'test/0',
+  'Ident string set from default args');
 
 exit;

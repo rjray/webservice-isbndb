@@ -123,6 +123,12 @@ sub args_to_string : PRIVATE
 
     my @nums = (join(' ', grep(/^index/, keys %$args))) =~ /(\d+)/g;
     my %names = map { $_ => $args->{"index$_"} } @nums;
+    if ($args->{page_number})
+    {
+        $names{page_number} = $args->{page_number};
+        push(@nums, 'page_number');
+    }
+
     my @parts = ();
 
     for (sort { $names{$a} cmp $names{$b} } @nums)
@@ -131,6 +137,10 @@ sub args_to_string : PRIVATE
         {
             push(@parts,
                  $names{$_} . '=' . join(',', sort @{$args->{"value$_"}}));
+        }
+        elsif ($_ eq 'page_number')
+        {
+            push(@parts, 'page_number=' . $args->{$_});
         }
         else
         {

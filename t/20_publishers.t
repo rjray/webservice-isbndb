@@ -14,11 +14,6 @@ my $dir = dirname $0;
 do "$dir/util.pl";
 do "$dir/DUMMY.pm";
 
-if (! can_connect_isbndb())
-{
-    plan skip_all => 'Cannot connect to isbndb.com, cannot run any tests.';
-}
-
 WebService::ISBNDB::API->set_default_api_key(api_key());
 
 open my $fh, "< $dir/Publishers-publisher_id=oreilly.xml"

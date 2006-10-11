@@ -27,6 +27,7 @@
 #                   Error
 #                   XML::LibXML
 #                   WebService::ISBNDB::Agent
+#                   WebService::ISBNDB::Iterator
 #
 #   Global Consts:  $VERSION
 #                   $BASEURL
@@ -45,6 +46,8 @@ use base 'WebService::ISBNDB::Agent';
 use Class::Std;
 use Error;
 use XML::LibXML;
+
+use WebService::ISBNDB::Iterator;
 
 $VERSION = "0.30";
 
@@ -202,9 +205,6 @@ sub request_uri : RESTRICTED
 #                   $obj      in      scalar    Object or type name or class
 #                   $args     in      hashref   Hash reference of arguments to
 #                                                 the raw request
-#                   $single   in      boolean   True/false whether we are to
-#                                                 return a singular or plural
-#                                                 result
 #
 #   Returns:        Success:    based on $single, a API-derived object or list
 #                   Failure:    throws Error::Simple
@@ -212,13 +212,8 @@ sub request_uri : RESTRICTED
 ###############################################################################
 sub request : RESTRICTED
 {
-    my ($self, $obj, $args, $single) = @_;
+    my ($self, $obj, $args) = @_;
     $obj = $self->resolve_obj($obj);
-
-    # Do we overwrite $obj with the new data, return it instead of a new
-    # object? We do this in "single" mode when $obj is an object instead of a
-    # type-name or full class-name.
-    my $overwrite = ($single and ref($obj)) ? 1 : 0;
 
     my $content = $self->raw_request($obj, $args);
 
@@ -232,9 +227,11 @@ sub request : RESTRICTED
         if (($dom) = $top_elt->getElementsByTagName('ErrorMessage'));
     my ($value, $stats) = $parse_table{$obj->get_type}->($self, $top_elt);
 
-    $obj->copy(ref($value) ? $value->[0] : $value) if $overwrite;
+    # Add two pieces to $stats that the iterator will need
+    $stats->{contents} = $value;
+    $stats->{request_args} = $args;
 
-    $value;
+    WebService::ISBNDB::Iterator->new($stats);
 }
 
 ###############################################################################
@@ -808,13 +805,12 @@ Each of these returns a list-reference of objects, even when there is only
 one result value. All of these methods are restricted to this class and
 its decendants.
 
-=item request($OBJ, $ARGS, $SINGLE) (R)
+=item request($OBJ, $ARGS) (R)
 
 Use the B<LWP::UserAgent> object to make a request on the remote service.
 C<$OBJ> indicates what type of data request is being made, and C<$ARGS> is a
-hash-reference of arguments to be passed in the request. The value C<$SINGLE>
-is a boolean that indicates whether a single value should be returned, or all
-values that result from parsing.
+hash-reference of arguments to be passed in the request. The return value is
+an object of the B<WebService::ISBNDB::Iterator> class.
 
 This method is restricted to this class, and is the required overload of the
 request() method from the parent class (L<WebService::ISBNDB::Agent>).
@@ -864,7 +860,8 @@ implemented.
 
 =head1 SEE ALSO
 
-L<WebService::ISBNDB::Agent>, L<LWP::UserAgent>
+L<WebService::ISBNDB::Agent>, L<WebService::ISBNDB::Iterator>,
+L<LWP::UserAgent>
 
 =head1 AUTHOR
 

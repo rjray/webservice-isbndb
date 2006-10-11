@@ -335,9 +335,7 @@ sub request_single
 {
     my ($self, $obj, $args) = @_;
 
-    my $content = $self->request($obj, $args, 'single');
-
-    return (ref($content) eq 'ARRAY') ? $content->[0] : $content;
+    $self->request($obj, $args)->first;
 }
 
 ###############################################################################
@@ -345,7 +343,7 @@ sub request_single
 #   Sub Name:       request_all
 #
 #   Description:    Make a request, returning all the matching records as
-#                   objects, in an array reference.
+#                   objects, in an Iterator instance.
 #
 #   Arguments:      NAME      IN/OUT  TYPE      DESCRIPTION
 #
@@ -361,9 +359,7 @@ sub request_all
 {
     my ($self, $obj, $args) = @_;
 
-    my $content = $self->request($obj, $args);
-
-    return (ref($content) eq 'ARRAY') ? $content : [ $content ];
+    $self->request($obj, $args);
 }
 
 ###############################################################################
@@ -902,8 +898,9 @@ decendents.
 
 =back
 
-All of the methods marked with an "R" (those that are restricted to this
-class and its decendants) return no content from their versions in this class.
+All of the request-construction methods (request_uri(), request_headers(),
+request_body() and request_method()) return no content (or null content) from
+their versions in this class.
 It is expected that implementation classes will override those that need to
 have content (certainly B<request_uri> and B<request_method>), and leave
 those that are not relevant to the protocol (REST, for example, does not need

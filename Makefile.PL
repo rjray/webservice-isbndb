@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# This is the MakeMaker skeleton for Net::ISBNDB. Now a wrapper around
+# This is the MakeMaker skeleton for WebService::ISBNDB, a wrapper around
 # Module::Build.
 #
 ###############################################################################

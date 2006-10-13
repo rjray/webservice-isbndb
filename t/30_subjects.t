@@ -16,7 +16,7 @@ do "$dir/DUMMY.pm";
 
 WebService::ISBNDB::API->set_default_api_key(api_key());
 
-open my $fh, "< $dir/Subjects-subject_id=perl_computer_program_language.xml"
+open my $fh, "< $dir/xml/Subjects-subject_id=perl_computer_program_language.xml"
    or die "Error opening test XML: $!";
 my $body = join('', <$fh>);
 close($fh);

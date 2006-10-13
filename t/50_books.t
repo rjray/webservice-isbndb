@@ -23,7 +23,7 @@ do "$dir/DUMMY.pm";
 
 WebService::ISBNDB::API->set_default_api_key(api_key());
 
-open my $fh, "< $dir/Books-isbn=0596002068.xml"
+open my $fh, "< $dir/xml/Books-isbn=0596002068.xml"
    or die "Error opening test XML: $!";
 my $body = join('', <$fh>);
 close($fh);

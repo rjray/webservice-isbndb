@@ -36,9 +36,9 @@ my @auth = ($body =~ /Person\s+person_id="(.*?)"/g);
 my @marc = ($body =~ /<MARC\s+(.*?)\s+\/>/g);
 my @price = ($body =~ /<Price\s+(.*?)\s+\/>/g);
 
-# 49 is the number of predefined tests, while the lists define the number of
+# 52 is the number of predefined tests, while the lists define the number of
 # on-the-fly tests.
-plan tests => 49 + @auth + @subj + 4*@marc + 12*@price;
+plan tests => 52 + @auth + @subj + 4*@marc + 12*@price;
 
 # For future ref: Need a book (or several) that has more of the data fields
 my $pwswp = '0596002068';
@@ -205,5 +205,12 @@ is($book->get_notes,
    'Includes bibliographical references (p. 434-437) and index.', 'Notes');
 is($book->get_urlstext, '', 'URLs text');
 is($book->get_awardstext, '', 'Awards text');
+
+# Try it with the Book ID instead of the ISBN
+$book = WebService::ISBNDB::API->new(Books =>
+                                     'programming_web_services_with_perl');
+isa_ok($book, 'WebService::ISBNDB::API::Books');
+is($book->get_id, 'programming_web_services_with_perl', 'ID');
+is($book->get_isbn, $pwswp, 'ISBN');
 
 exit;

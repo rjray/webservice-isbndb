@@ -53,7 +53,7 @@ use Class::Std;
 use Error;
 use Business::ISBN qw(is_valid_checksum);
 
-$VERSION = "0.30";
+$VERSION = "0.31";
 
 BEGIN
 {
@@ -167,7 +167,7 @@ sub find
         }
         else
         {
-            $args = { title => $args };
+            $args = { book_id => $args };
         }
     }
 
@@ -295,7 +295,8 @@ sub normalize_args
         }
 
         # These are the only other allowed search-keys
-        if ($key =~ /^(:?dewey_decimal|lcc_number|full|combined|title|isbn)$/)
+        if ($key =~
+            /^(:?dewey_decimal|lcc_number|full|combined|title|isbn|book_id)$/)
         {
             $args->{"index$count"} = $key;
             $args->{"value$count"} = $value;

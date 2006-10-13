@@ -93,7 +93,7 @@ sub raw_request : RESTRICTED
         unless $argstring;
 
     # File name is the type + args. Throw an error if we can't open it.
-    my $file = "$BASEDIR/$type-$argstring.xml";
+    my $file = "$BASEDIR/xml/$type-$argstring.xml";
     throw Error::Simple("Error opening $file for reading: $!")
         unless open my $fh, "< $file";
 

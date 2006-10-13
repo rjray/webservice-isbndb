@@ -13,6 +13,43 @@
     Revision history for the Perl extension module WebService::ISBNDB. This is
     an API to communicate with the web service hosted by isbndb.com.
   </description>
+  <release version="0.31" tag="v0_31" date="2006-10-12T22:27:13-06:00">
+    <change>
+      <fileset>
+        <file path="Build.PL" revision="36" />
+        <file path="lib/WebService/ISBNDB.pm" action="ADD" revision="36" />
+        <file path="t/00_load.t" revision="36" />
+      </fileset>
+      <description>
+        Added a WebService::ISBNDB module. This is an empty module that acts as
+        the version place-holder, both for build numbering and for testing by
+        modules that depend on this package.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB/API.pm" revision="37" />
+        <file path="t/05_api_baseclass.t" revision="37" />
+      </fileset>
+      <description>
+        Found that creating an API object with an explicit API key argument was
+        ignoring the user argument and using the default all the time. Also
+        created test cases to check this going forward.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB/API/Books.pm" revision="38" />
+        <file path="t/50_books.t" revision="38" />
+        <file path="t/Books-book_id=programming_web_services_with_perl.xml"
+              action="ADD" revision="38" />
+      </fileset>
+      <description>
+        Fixed a bug in which looking up a book (via find()) with the ID instead
+        of the ISBN did not work. Added a unit test for this, as well.
+      </description>
+    </change>
+  </release>
   <release version="0.30" tag="v0_30" date="2006-10-11T02:58:55-06:00">
     <change>
       <fileset>

@@ -65,7 +65,7 @@ use Class::Std;
 use Error;
 require WebService::ISBNDB::Agent;
 
-$VERSION = "0.20";
+$VERSION = "0.21";
 
 BEGIN
 {
@@ -232,10 +232,10 @@ sub BUILD
     $protocol{$id}   = uc $args->{protocol} || $self->get_default_protocol;
     $agent{$id}      = $args->{agent};
     # Fall back to the defaults here
-    $api_key{$id}    = $self->get_default_api_key unless $api_key{$id};
-    $agent_args{$id} = $self->get_default_agent_args unless $agent_args{$id};
+    $api_key{$id}    = $self->get_default_api_key unless $args->{api_key};
+    $agent_args{$id} = $self->get_default_agent_args unless $args->{agent_args};
     # Remove these so they aren't further processed
-    delete @$args{qw(protocol agent api_key agent_args)};
+    delete @$args{qw(protocol agent)};
 
     return;
 }

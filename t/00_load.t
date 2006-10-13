@@ -10,7 +10,8 @@ use Test::More;
 
 BEGIN
 {
-    @MODULES = qw(WebService::ISBNDB::API
+    @MODULES = qw(WebService::ISBNDB
+                  WebService::ISBNDB::API
                   WebService::ISBNDB::API::Authors
                   WebService::ISBNDB::API::Books
                   WebService::ISBNDB::API::Categories

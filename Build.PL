@@ -18,7 +18,6 @@ my $build = Module::Build->new(
     dist_author    => 'Randy J. Ray <rjray@blackperl.com>',
     dist_abstract  =>
     'Data and communication classes for talking to isbndb.com',
-    dist_version   => '0.30',
     sign           => 'here, please',
 );
 

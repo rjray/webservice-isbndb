@@ -1,6 +1,13 @@
 Revision history for Perl module WebService-ISBNDB.
 # $Id$
 
+0.32	Sat Dec  2 03:46:00 MST 2006
+
+	lib/WebService/ISBNDB/API.pm:
+	Fixed a bug reported by Kevin Old in which trying to "find" an item
+	using a handle with a non-default API key, and the factory
+	syntax, would fail to use the existing API key.
+
 0.31	Thu Oct 12 22:27:13 MDT 2006
 
 	Build.PL:

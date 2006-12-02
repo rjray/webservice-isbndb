@@ -1,6 +1,6 @@
 WebService::ISBNDB - Access to the isbndb.com API
 
-Version: 0.31
+Version: 0.32
 
 WHAT IS IT
 
@@ -33,21 +33,7 @@ Please send any reports of problems or bugs to rjray@blackperl.com
 
 CHANGES
 
-Build.PL:
-lib/WebService/ISBNDB.pm:
-t/00_load.t:
-Added a WebService::ISBNDB module. This is an empty module that acts
-as the version place-holder, both for build numbering and for testing
-by modules that depend on this package.
-
 lib/WebService/ISBNDB/API.pm:
-t/05_api_baseclass.t:
-Found that creating an API object with an explicit API key argument was
-ignoring the user argument and using the default all the time. Also
-created test cases to check this going forward.
-
-lib/WebService/ISBNDB/API/Books.pm:
-t/50_books.t:
-t/Books-book_id=programming_web_services_with_perl.xml:
-Fixed a bug in which looking up a book (via find()) with the ID instead
-of the ISBN did not work. Added a unit test for this, as well.
+Fixed a bug reported by Kevin Old in which trying to "find" an item
+using a handle with a non-default API key, and the factory syntax,
+would fail to use the existing API key.

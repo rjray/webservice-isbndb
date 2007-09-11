@@ -9,7 +9,7 @@ my $build = Module::Build->new(
     license        => 'artistic',
     requires       => { perl => '5.6.0',
                         LWP => '5.801',
-                        Business::ISBN => '1.80',
+                        Business::ISBN => '2.0',
                         Class::Std => '0.0.8',
                         Error => '0.17',
                         XML::LibXML => '1.58' },

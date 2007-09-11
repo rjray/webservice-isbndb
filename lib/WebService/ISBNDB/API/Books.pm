@@ -51,9 +51,9 @@ use base 'WebService::ISBNDB::API';
 
 use Class::Std;
 use Error;
-use Business::ISBN qw(is_valid_checksum);
+use Business::ISBN;
 
-$VERSION = "0.31";
+$VERSION = "0.32";
 
 BEGIN
 {
@@ -161,7 +161,9 @@ sub find
     # needs to become either an ISBN or title argument.
     if (! ref($args))
     {
-        if (is_valid_checksum($args) eq Business::ISBN::GOOD_ISBN)
+        my $obj;
+        if (ref($obj = Business::ISBN->new($args)) and
+            $obj->is_valid_checksum() eq Business::ISBN::GOOD_ISBN)
         {
             $args = { isbn => $args };
         }
@@ -359,7 +361,8 @@ sub set_isbn
     my ($self, $isbn) = @_;
 
     throw Error::Simple("The value '$isbn' is not a valid ISBN")
-        unless (is_valid_checksum($isbn) eq Business::ISBN::GOOD_ISBN);
+        unless (Business::ISBN->new($isbn)->is_valid_checksum eq
+                Business::ISBN::GOOD_ISBN);
     $isbn{ident $self} = $isbn;
 
     $self;

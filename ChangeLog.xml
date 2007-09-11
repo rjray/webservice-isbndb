@@ -15,7 +15,7 @@
   </description>
   <release version="0.33" date="2007-09-11T11:04:20">
     <change>
-      <file path="lib/WebService/ISBNDB/API/Books.pm" revision="" />
+      <file path="lib/WebService/ISBNDB/API/Books.pm" revision="44" />
       <description>
         Re-wrote areas that use Business::ISBN, due to some interface
         changes in the latest version. Some just broke tests, but one

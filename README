@@ -1,6 +1,6 @@
 WebService::ISBNDB - Access to the isbndb.com API
 
-Version: 0.32
+Version: 0.33
 
 WHAT IS IT
 
@@ -33,7 +33,7 @@ Please send any reports of problems or bugs to rjray@blackperl.com
 
 CHANGES
 
-lib/WebService/ISBNDB/API.pm:
-Fixed a bug reported by Kevin Old in which trying to "find" an item
-using a handle with a non-default API key, and the factory syntax,
-would fail to use the existing API key.
+lib/WebService/ISBNDB/API/Books.pm:
+Re-wrote areas that use Business::ISBN, due to some interface
+changes in the latest version. Some just broke tests, but one
+flat out broke this module.

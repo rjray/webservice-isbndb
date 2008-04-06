@@ -20,7 +20,7 @@ use 5.006;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = "0.33";
+$VERSION = "0.34";
 
 1;
 

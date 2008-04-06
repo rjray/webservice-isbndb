@@ -167,8 +167,10 @@ sub request_uri : RESTRICTED
         unless $apiloc;
 
     # Only add the "access_key" argument if it isn't already present. They may
-    # have overridden it.
-    $argscopy->{access_key} = $key unless $argscopy->{access_key};
+    # have overridden it. It will have come from the enclosing object under
+    # the label "api_key".
+    $argscopy->{access_key} = $argscopy->{api_key} || $key;
+    delete $argscopy->{api_key}; # Just in case, so to not confuse their API
     # Build the request parameters list
     my @args = ();
     for $key (sort keys %$argscopy)

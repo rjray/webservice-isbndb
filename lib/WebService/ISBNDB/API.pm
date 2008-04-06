@@ -63,7 +63,7 @@ use Class::Std;
 use Error;
 require WebService::ISBNDB::Agent;
 
-$VERSION = "0.22";
+$VERSION = "0.23";
 
 BEGIN
 {
@@ -639,6 +639,7 @@ sub search
         throw Error::Simple("search: Unknown factory type '$type'")
             unless ($type = $self->class_for_type($type));
         eval "require $type;";
+        $args[0]->{api_key} = $self->get_api_key;
         return $type->search(@args);
     }
 

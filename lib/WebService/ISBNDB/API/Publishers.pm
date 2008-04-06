@@ -294,6 +294,10 @@ sub normalize_args
     $count = 0; # Used to gradually increment the "indexX" and "valueX" keys
     foreach $key (@keys)
     {
+        # If we see "api_key", it means that WebService::ISBNDB::API::search
+        # curried it into the arglist due to the type-level search being
+        # called as a static method.
+        next if $key eq 'api_key';
         $value = $args->{$key};
         delete $args->{$key};
         $count++;

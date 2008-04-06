@@ -1,6 +1,46 @@
 Revision history for Perl module WebService-ISBNDB.
 # $Id$
 
+0.34	Sun Apr  6 04:00:00 PDT 2008
+
+	lib/WebService/ISBNDB.pm
+	lib/WebService/ISBNDB/API.pm
+	lib/WebService/ISBNDB/API/Authors.pm
+	lib/WebService/ISBNDB/API/Books.pm
+	lib/WebService/ISBNDB/API/Categories.pm
+	lib/WebService/ISBNDB/API/Publishers.pm
+	lib/WebService/ISBNDB/API/Subjects.pm
+	lib/WebService/ISBNDB/Agent.pm
+	lib/WebService/ISBNDB/Agent/REST.pm
+	lib/WebService/ISBNDB/Iterator.pm
+	t/DUMMY.pm
+	Fixed/updated copyright and licensing information. All licensing links
+	are current with regards to Artistic 2.0 and LGPL 2.1.
+
+	lib/WebService/ISBNDB.pm
+	lib/WebService/ISBNDB/API.pm
+	lib/WebService/ISBNDB/API/Authors.pm
+	lib/WebService/ISBNDB/API/Books.pm
+	lib/WebService/ISBNDB/API/Categories.pm
+	lib/WebService/ISBNDB/API/Publishers.pm
+	lib/WebService/ISBNDB/API/Subjects.pm
+	lib/WebService/ISBNDB/Agent/REST.pm
+	Fixed a bug found by Gavin Carr in which search attempts routed through
+	static-method invocations of search() in any of the types (Books,
+	Authors, etc.) would fail to get the API key unless one had been set as
+	a default.
+
+	lib/WebService/ISBNDB/API/Authors.pm
+	lib/WebService/ISBNDB/API/Categories.pm
+	lib/WebService/ISBNDB/API/Publishers.pm
+	lib/WebService/ISBNDB/API/Subjects.pm
+	lib/WebService/ISBNDB/Agent/REST.pm
+	Fixed $VERSION strings to bump them up; bitten by svn oversight again.
+
+	lib/WebService/ISBNDB.pm
+	Added the warnings pragma for cleanliness and consistency (despite this
+	being a dummy module).
+
 0.33	Tue Sep 11 04:04:20 PDT 2007
 
 	lib/WebService/ISBNDB/API/Books.pm:

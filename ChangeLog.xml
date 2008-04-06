@@ -13,6 +13,64 @@
     Revision history for the Perl extension module WebService::ISBNDB. This is
     an API to communicate with the web service hosted by isbndb.com.
   </description>
+  <release version="0.34" date="2008-04-06T04:00:00-07:00">
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API/Authors.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API/Books.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API/Categories.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API/Publishers.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/API/Subjects.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/Agent.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/Agent/REST.pm" revision="47" />
+        <file path="lib/WebService/ISBNDB/Iterator.pm" revision="47" />
+        <file path="t/DUMMY.pm" revision="47" />
+      </fileset>
+      <description>
+        Fixed/updated copyright and licensing information. All licensing links
+        are current with regards to Artistic 2.0 and LGPL 2.1.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API/Authors.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API/Books.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API/Categories.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API/Publishers.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/API/Subjects.pm" revision="48" />
+        <file path="lib/WebService/ISBNDB/Agent/REST.pm" revision="48" />
+      </fileset>
+      <description>
+        Fixed a bug found by Gavin Carr in which search attempts routed through
+        static-method invocations of search() in any of the types (Books,
+        Authors, etc.) would fail to get the API key unless one had been set as
+        a default.
+      </description>
+    </change>
+    <change>
+      <fileset>
+        <file path="lib/WebService/ISBNDB/API/Authors.pm" revision="49" />
+        <file path="lib/WebService/ISBNDB/API/Categories.pm" revision="49" />
+        <file path="lib/WebService/ISBNDB/API/Publishers.pm" revision="49" />
+        <file path="lib/WebService/ISBNDB/API/Subjects.pm" revision="49" />
+        <file path="lib/WebService/ISBNDB/Agent/REST.pm" revision="49" />
+      </fileset>
+      <description>
+        Fixed $VERSION strings to bump them up; bitten by svn oversight again.
+      </description>
+    </change>
+    <change>
+      <file path="lib/WebService/ISBNDB.pm" revision="50" />
+      <description>
+        Added the warnings pragma for cleanliness and consistency (despite this
+        being a dummy module).
+      </description>
+    </change>
+  </release>
   <release version="0.33" date="2007-09-11T11:04:20">
     <change>
       <file path="lib/WebService/ISBNDB/API/Books.pm" revision="44" />

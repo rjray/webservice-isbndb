@@ -1,6 +1,6 @@
 WebService::ISBNDB - Access to the isbndb.com API
 
-Version: 0.33
+Version: 0.34
 
 WHAT IS IT
 
@@ -33,7 +33,15 @@ Please send any reports of problems or bugs to rjray@blackperl.com
 
 CHANGES
 
-lib/WebService/ISBNDB/API/Books.pm:
-Re-wrote areas that use Business::ISBN, due to some interface
-changes in the latest version. Some just broke tests, but one
-flat out broke this module.
+Fixed/updated copyright and licensing information. All licensing links
+are current with regards to Artistic 2.0 and LGPL 2.1.
+
+Fixed a bug found by Gavin Carr in which search attempts routed through
+static-method invocations of search() in any of the types (Books,
+Authors, etc.) would fail to get the API key unless one had been set as
+a default.
+
+Fixed $VERSION strings to bump them up; bitten by svn oversight again.
+
+Added the warnings pragma for cleanliness and consistency (despite this
+being a dummy module).

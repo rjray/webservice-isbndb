@@ -39,7 +39,7 @@ use base 'WebService::ISBNDB::API';
 use Class::Std;
 use Error;
 
-$VERSION = "0.20";
+$VERSION = "0.21";
 
 my %id               : ATTR(:init_arg<id> :get<id>  :default<>);
 my %name             : ATTR(:name<name>             :default<>);

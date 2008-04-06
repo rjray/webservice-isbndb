@@ -47,7 +47,7 @@ use XML::LibXML;
 
 use WebService::ISBNDB::Iterator;
 
-$VERSION = "0.30";
+$VERSION = "0.31";
 
 BEGIN
 {

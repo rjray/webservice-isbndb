@@ -18,6 +18,7 @@ package WebService::ISBNDB;
 
 use 5.006;
 use strict;
+use warnings;
 use vars qw($VERSION);
 
 $VERSION = "0.34";
